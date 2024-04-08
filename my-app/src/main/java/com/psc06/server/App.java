@@ -1,4 +1,4 @@
-package com.mycompany.app;
+package com.psc06.server;
 
 /**
  * Hello world!
