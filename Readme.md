@@ -1,4 +1,4 @@
-**Proyecto de la asignatura de SPQ Para el grupo PSC_6**
+**Proyecto de la asignatura de Procesos de Software y Calidad para el grupo PSC_6**
 ------------- 
 **Crear la base de datos y darle permisos a un usuario**
 
@@ -19,6 +19,10 @@
 ```
 mvn clean
 mvn compile
+```
+
+**Obtener la información de las clases de la BBDD**
+```
 mvn datanucleus:enhance
 ```
 
@@ -31,13 +35,6 @@ mvn datanucleus:schema-create
 **Datos de prueba**
 ```
 mvn -Pdatos exec:java
-```
-
-**Instalar el proyecto para ejecutar el jar**
-```
-//En la primera ocasion que se ejecute dará error
-//A la segunda funcionará correctamente
-mvn install
 ```
 
 **Lanzar server**
