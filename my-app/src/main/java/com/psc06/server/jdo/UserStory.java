@@ -1,4 +1,4 @@
-package com.psc06.server;
+package com.psc06.server.jdo;
 
 public class UserStory {
     
