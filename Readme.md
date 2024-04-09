@@ -15,7 +15,6 @@
     GRANT ALL ON proyectosDB.* TO 'spq'@'localhost';
 
 **Compilar el proyecto**
-
 ```
 mvn clean
 mvn compile
@@ -27,7 +26,6 @@ mvn datanucleus:enhance
 ```
 
 **Crear las tablas de la base de datos**
-
 ```
 mvn datanucleus:schema-create
 ```
