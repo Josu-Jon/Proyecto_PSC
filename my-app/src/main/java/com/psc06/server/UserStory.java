@@ -7,6 +7,12 @@ public class UserStory {
     int estimation;
     int pbPriority;
 
+    public UserStory(int id, String userStory, int estimation, int pbPriority) {
+        this.id = id;
+        this.userStory = userStory;
+        this.estimation = estimation;
+        this.pbPriority = pbPriority;
+    }
 
     public int getId() {
         return id;
@@ -35,5 +41,5 @@ public class UserStory {
     public void setPbPriority(int pbPriority) {
         this.pbPriority = pbPriority;
     }
-
 }
+
