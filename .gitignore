@@ -9,4 +9,5 @@ settings.json
 .settings
 .idea
 .project
+datanucleus.log
 

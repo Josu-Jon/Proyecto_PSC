@@ -30,9 +30,9 @@ mvn datanucleus:enhance
 mvn datanucleus:schema-create
 ```
 
-**Datos de prueba**
+**Instalar el proyecto para ejecutar el jar**
 ```
-mvn -Pdatos exec:java
+mvn install
 ```
 
 **Lanzar server**
