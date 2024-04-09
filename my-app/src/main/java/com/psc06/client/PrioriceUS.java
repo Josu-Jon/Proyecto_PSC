@@ -61,9 +61,9 @@ public class PrioriceUS extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(PrioriceUS::new);
-    }
+   // public static void main(String[] args) {
+   //     SwingUtilities.invokeLater(PrioriceUS::new);
+    //}
 }
 
 

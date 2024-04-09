@@ -17,6 +17,7 @@ public class USInterface extends JFrame {
     private JTextField titleTextField;
     private JTextField priorityTextField;
     private JTextField estimationTextField; 
+    private JButton backButton;
     private JButton createButton;
 
     public USInterface() {
@@ -86,13 +87,21 @@ public class USInterface extends JFrame {
                 }
             }
         });
+        backButton = new JButton("Volver Atrás"); 
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose(); 
+                new MainInterface(); 
+            }
+        });
         centerPanel.add(createButton);
+        centerPanel.add(backButton);
         add(centerPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(USInterface::new);
-    }
+   // public static void main(String[] args) {
+    //    SwingUtilities.invokeLater(USInterface::new);
+   // }
 }
