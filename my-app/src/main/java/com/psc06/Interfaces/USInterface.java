@@ -4,18 +4,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.ArrayList;
+import com.psc06.server.UserStory;
+import java.util.List;
 public class USInterface extends JFrame {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel titleLabel;
+	private JLabel priorityLabel; 
     private JLabel descriptionLabel;
     private JTextField titleTextField;
+    private JTextField priorityTextField;
     private JTextArea descriptionTextArea;
     private JButton createButton;
 
+    private static List<UserStory> userStories = new ArrayList<>();
     public USInterface() {
         setTitle("Crear Historia de Usuario");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
