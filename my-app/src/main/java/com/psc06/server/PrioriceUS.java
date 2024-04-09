@@ -1,6 +1,4 @@
-package com.psc06.Interfaces;
-
-import com.psc06.server.UserStory;
+package com.psc06.server;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
