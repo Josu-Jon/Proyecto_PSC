@@ -162,8 +162,9 @@
 
 
   <profiles>
+    <!-- Exec as -Pclient to run client -->
     <profile>
-      <id>datos</id>
+      <id>client</id>
       <build>
         <plugins>
           <plugin>
@@ -178,29 +179,11 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.BGS006.cliente.jdo.MainJDO</mainClass>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>servidor</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <mainClass>com.BGS006.servidor.Main</mainClass>
+              <mainClass>es.deusto.spq.client.ExampleClient</mainClass>
+              <arguments>
+                <argument>${server.hostname}</argument>
+                <argument>${server.port}</argument>
+              </arguments>
             </configuration>
           </plugin>
         </plugins>

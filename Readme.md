@@ -2,7 +2,17 @@
 ------------- 
 **Crear la base de datos y darle permisos a un usuario**
 
+    /* DELETE 'proyectosDB' database*/
+    DROP SCHEMA IF EXISTS proyectosDB;
+    /* DELETE USER 'spq' AT LOCAL SERVER*/
+    DROP USER IF EXISTS 'spq'@'localhost';
     
+    /* CREATE 'proyectosDB' DATABASE */
+    CREATE SCHEMA proyectosDB;
+    /* CREATE THE USER 'spq' AT LOCAL SERVER WITH PASSWORD 'spq' */
+    CREATE USER IF NOT EXISTS 'spq'@'localhost' IDENTIFIED BY 'spq';
+    
+    GRANT ALL ON proyectosDB.* TO 'spq'@'localhost';
 
 **Compilar el proyecto**
 
@@ -32,15 +42,11 @@ mvn install
 
 **Lanzar server**
 ```
-mvn -Pservidor exec:java
+mvn jetty:run
 ```
-*si escribimos en la página web por ejemplo el siguiente enlace*
-[http://localhost:8080/myapp/usuarios](http://localhost:8080/myapp/usuarios)
-
-nos mostrará los usuarios
 
 ***Lanzar cliente***
 ```
-mvn exec:java
+mvn -Pclient exec:java
 
 ```
