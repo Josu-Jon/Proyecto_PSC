@@ -1,11 +1,10 @@
-package com.psc06.server;
+package com.psc06.client;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class USInterface extends JFrame {
     /**
@@ -19,8 +18,6 @@ public class USInterface extends JFrame {
     private JTextField priorityTextField;
     private JTextField estimationTextField; 
     private JButton createButton;
-
-    private static List<UserStory> userStories = new ArrayList<>();
 
     public USInterface() {
         setTitle("Crear Historia de Usuario");
@@ -76,8 +73,8 @@ public class USInterface extends JFrame {
                 }
 
                 if (!title.isEmpty()) {
-                    UserStory newUserStory = new UserStory(userStories.size() + 1, title, priority, estimation); 
-                    userStories.add(newUserStory);
+                   // UserStory newUserStory = new UserStory(userStories.size() + 1, title, priority, estimation); 
+                   // userStories.add(newUserStory);
 
                     JOptionPane.showMessageDialog(USInterface.this, "Historia de usuario creada: \n\nTítulo: " + title + "\nPrioridad: " + priority + "\nEstimación: " + estimation);
 

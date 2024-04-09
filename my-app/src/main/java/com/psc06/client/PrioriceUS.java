@@ -1,7 +1,10 @@
-package com.psc06.server;
+package com.psc06.client;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import com.psc06.server.UserStory;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,12 +18,12 @@ public class PrioriceUS extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable usTable;
     private JButton createButton; 
-    private JButton prioritizeButton;
+
 
     public PrioriceUS() {
         setTitle("Priorizar User Stories");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 350);
+        setSize(600, 350);
         setLayout(new BorderLayout());
 
         // Datos de prueba
@@ -32,9 +35,10 @@ public class PrioriceUS extends JFrame {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Nombre de User Story");
         model.addColumn("Prioridad");
+        model.addColumn("Estimación");
 
         for (UserStory us : userStories) {
-            model.addRow(new Object[]{us.getUserStory(), us.getPbPriority()});
+            model.addRow(new Object[]{us.getUserStory(), us.getPbPriority(), us.getEstimation()});
         }
 
         usTable = new JTable(model);
@@ -53,8 +57,6 @@ public class PrioriceUS extends JFrame {
         });
         add(createButton, BorderLayout.NORTH); 
 
-        prioritizeButton = new JButton("Priorizar");
-        add(prioritizeButton, BorderLayout.SOUTH);
 
         setVisible(true);
     }
