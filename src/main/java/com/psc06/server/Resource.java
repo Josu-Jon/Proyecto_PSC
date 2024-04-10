@@ -18,6 +18,9 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import com.psc06.pojo.UserStoryData;
+import com.psc06.server.jdo.UserStory;
+
 @Path("/resource")
 @Produces(MediaType.APPLICATION_JSON)
 public class Resource {
@@ -33,10 +36,9 @@ public class Resource {
 		this.pm = pmf.getPersistenceManager();
 		this.tx = pm.currentTransaction();
 	}
-}
 /*
 	@POST
-	@Path("/sayMessage")
+	@Path("/createUserStory")
 	public Response sayMessage(DirectMessage directMessage) {
 		User user = null;
 		try{
@@ -73,30 +75,31 @@ public class Resource {
 			return Response.status(Status.BAD_REQUEST).entity("Login details supplied for message delivery are not correct").build();
 		}
 	}
+	*/
 	
 	@POST
-	@Path("/register")
-	public Response registerUser(UserData userData) {
+	@Path("/registerUserStory")
+	public Response registerUserStory(UserStoryData userStoryData) {
 		try
         {	
             tx.begin();
-            logger.info("Checking whether the user already exits or not: '{}'", userData.getLogin());
-			User user = null;
+            logger.info("Checking whether the user already exits or not: '{}'", userStoryData.getId());
+			UserStory story = null;
 			try {
-				user = pm.getObjectById(User.class, userData.getLogin());
+				story = pm.getObjectById(UserStory.class, userStoryData.getId());
 			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
-			logger.info("User: {}", user);
-			if (user != null) {
-				logger.info("Setting password user: {}", user);
-				user.setPassword(userData.getPassword());
-				logger.info("Password set user: {}", user);
+
+			logger.info("User Story: {}", story);
+
+			if (story != null) {
+				logger.info("Story already created: {}", story);
 			} else {
-				logger.info("Creating user: {}", user);
-				user = new User(userData.getLogin(), userData.getPassword());
-				pm.makePersistent(user);					 
-				logger.info("User created: {}", user);
+				logger.info("Creating story: {}", story);
+				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(), userStoryData.getEstimation(), userStoryData.getPbPriority());
+				pm.makePersistent(story);					 
+				logger.info("User Story created: {}", story);
 			}
 			tx.commit();
 			return Response.ok().build();
@@ -110,12 +113,13 @@ public class Resource {
       
 		}
 	}
-
+	/* 
 	@GET
 	@Path("/hello")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response sayHello() {
 		return Response.ok("Hello world!").build();
 	}
+	*/
 }
-*/
+

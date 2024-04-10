@@ -1,25 +1,15 @@
-package com.psc06.server.jdo;
+package com.psc06.pojo;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.PrimaryKey;
+public class UserStoryData {
 
-@PersistenceCapable
-public class UserStory {
-
-    @PrimaryKey
     private int id;
-
     private String userStory;
     private int estimation;
     private int pbPriority;
 
-    
-	public UserStory(int id, String userStory, int estimation, int pbPriority) {
-		this.id = id;
-        this.userStory = userStory;
-        this.estimation = estimation;
-        this.pbPriority = pbPriority;
-	}
+    public UserStoryData(){
+        // Serialization
+    }
 
     public int getId() {
         return id;
