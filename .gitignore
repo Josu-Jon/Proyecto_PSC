@@ -7,6 +7,7 @@ settings.json
 
 #Ignore ficheros eclipse/idea
 .settings
+.classpath
 .idea
 .project
 datanucleus.log
