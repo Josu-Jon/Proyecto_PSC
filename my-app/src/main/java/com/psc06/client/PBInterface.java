@@ -5,7 +5,6 @@ import com.psc06.server.UserStory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PBInterface extends JFrame {
