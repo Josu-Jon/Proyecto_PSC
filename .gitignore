@@ -1,6 +1,7 @@
 #Ignore la carpeta target y vscode
 target/
 .vscode
+.project
 
 #Ignore la configuracion del settings
 settings.json
