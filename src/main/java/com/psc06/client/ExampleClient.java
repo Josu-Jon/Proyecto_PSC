@@ -26,7 +26,7 @@ public class ExampleClient {
 	private static final int pb1 = 2;
 
 	// Userstory 2
-	private static final int id2 = 1;
+	private static final int id2 = 2;
 	private static final String userstory2 = "Crear pom";
 	private static final int est2 = 2;
 	private static final int pb2 = 7;
