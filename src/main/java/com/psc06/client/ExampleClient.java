@@ -9,10 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-/*
-import com.psc06.pojo.DirectMessage;
-import com.psc06.pojo.MessageData;
-import com.psc06.pojo.UserData;
+
+import com.psc06.pojo.UserStoryData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +19,17 @@ public class ExampleClient {
 
 	protected static final Logger logger = LogManager.getLogger();
 
-	private static final String USER = "aaaaa";
-	private static final String PASSWORD = "aaaaa";
+	// Userstory 1
+	private static final int id1 = 1;
+	private static final String userstory1 = "Crear cliente y servidor";
+	private static final int est1 = 5;
+	private static final int pb1 = 2;
+
+	// Userstory 2
+	private static final int id2 = 2;
+	private static final String userstory2 = "Crear pom";
+	private static final int est2 = 2;
+	private static final int pb2 = 7;
 
 
 	private Client client;
@@ -33,42 +40,20 @@ public class ExampleClient {
 		webTarget = client.target(String.format("http://%s:%s/rest/resource", hostname, port));
 	}
 
-	public void registerUser(String login, String password) {
-		WebTarget registerUserWebTarget = webTarget.path("register");
+	public void registerUserStory(int id, String userStory, int estimation, int pbPriority) {
+		WebTarget registerUserWebTarget = webTarget.path("registerUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
-		UserData userData = new UserData();
-		userData.setLogin(login);
-		userData.setPassword(password);
-		Response response = invocationBuilder.post(Entity.entity(userData, MediaType.APPLICATION_JSON));
+		UserStoryData newStory = new UserStoryData();
+		newStory.setId(id);
+		newStory.setUserStory(userStory);
+		newStory.setEstimation(estimation);
+		newStory.setPbPriority(pbPriority);
+		Response response = invocationBuilder.post(Entity.entity(newStory, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User correctly registered");
-		}
-	}
-
-	public void sayMessage(String login, String password, String message) {
-		WebTarget sayHelloWebTarget = webTarget.path("sayMessage");
-		Invocation.Builder invocationBuilder = sayHelloWebTarget.request(MediaType.APPLICATION_JSON);
-
-		DirectMessage directMessage = new DirectMessage();
-		UserData userData = new UserData();
-		userData.setLogin(login);
-		userData.setPassword(password);
-
-		directMessage.setUserData(userData);
-
-		MessageData messageData = new MessageData();
-		messageData.setMessage(message);
-		directMessage.setMessageData(messageData);
-
-		Response response = invocationBuilder.post(Entity.entity(directMessage, MediaType.APPLICATION_JSON));
-		if (response.getStatus() != Status.OK.getStatusCode()) {
-			logger.error("Error connecting with the server. Code: {}",response.getStatus());
-		} else {
-			String responseMessage = response.readEntity(String.class);
-			logger.info("* Message coming from the server: '{}'", responseMessage);
+			logger.info("User Story correctly created");
 		}
 	}
 
@@ -81,9 +66,9 @@ public class ExampleClient {
 		String hostname = args[0];
 		String port = args[1];
 
-		ExampleClient exampleClient = new ExampleClient(hostname, port);
-		exampleClient.registerUser(USER, PASSWORD);
-		exampleClient.sayMessage(USER, PASSWORD, "This is a test!...");
+		ExampleClient conSer = new ExampleClient(hostname, port);
+		conSer.registerUserStory(id1, userstory1, est1, pb1);
+		conSer.registerUserStory(id2, userstory2, est2, pb2);
+		
 	}
 }
-*/
