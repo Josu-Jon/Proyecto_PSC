@@ -1,3 +1,14 @@
-/target/
-/target/*
+#Ignore la carpeta target y vscode
+target/
+.vscode
+
+#Ignore la configuracion del settings
 settings.json
+
+#Ignore ficheros eclipse/idea
+.settings
+.classpath
+.idea
+.project
+datanucleus.log
+

@@ -1,8 +1,14 @@
-package com.psc06.server;
+package com.psc06.server.jdo;
 
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.PrimaryKey;
+
+@PersistenceCapable
 public class UserStory {
-    
+
+    @PrimaryKey
     int id;
+
     String userStory;
     int estimation;
     int pbPriority;
@@ -34,6 +40,10 @@ public class UserStory {
     }
     public void setPbPriority(int pbPriority) {
         this.pbPriority = pbPriority;
+    }
+
+    public String toString() {
+        return "User story: " + this.userStory + ", estimación: " + this.estimation + "y prioridad: " + this.pbPriority;
     }
 
 }
