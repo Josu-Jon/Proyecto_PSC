@@ -22,6 +22,11 @@ mvn clean
 mvn compile
 ```
 
+**Cargar el script que borra la BBDD si existe y la crea de nuevo (IMPORTANTE EJECUTAR ANTES DE DATANUCLEUS)**
+```
+mysql –uroot -p < sql/create-productsdb.sql
+```
+
 **Obtener la información de las clases de la BBDD**
 ```
 mvn datanucleus:enhance
