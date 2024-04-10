@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import server.jdo.UserStory;
+import com.psc06.server.jdo.UserStory;
 
 public class Interface extends JFrame {
     private JTable usTable;
