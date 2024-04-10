@@ -18,6 +18,7 @@ public class PrioriceUS extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable usTable;
     private JButton createButton; 
+    private JButton backButton;
 
 
     public PrioriceUS() {
@@ -55,7 +56,16 @@ public class PrioriceUS extends JFrame {
                 new USInterface();
             }
         });
+        backButton = new JButton("Volver Atrás"); 
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose(); 
+                new MainInterface(); 
+            }
+        });
+
         add(createButton, BorderLayout.NORTH); 
+        add(backButton, BorderLayout.SOUTH); 
 
 
         setVisible(true);
