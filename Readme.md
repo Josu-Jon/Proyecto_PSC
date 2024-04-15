@@ -1,6 +1,6 @@
 **Proyecto de la asignatura de Procesos de Software y Calidad para el grupo PSC_6**
 ===============================
-[![Java CI](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml/badge.svg)](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml)
+[![Java CI](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml/badge.svg)](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml)   [![codecov](https://codecov.io/gh/Josu-Jon/Proyecto_PSC/graph/badge.svg?token=VUYZEI6UJF)](https://codecov.io/gh/Josu-Jon/Proyecto_PSC)
 
 **Crear la base de datos y darle permisos a un usuario**
 
