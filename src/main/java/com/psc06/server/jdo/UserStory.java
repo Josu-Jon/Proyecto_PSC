@@ -2,6 +2,11 @@ package com.psc06.server.jdo;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Persistent;
+
+import java.util.LinkedHashSet;
+
+import com.psc06.server.UserStory;
 
 @PersistenceCapable
 public class UserStory {
@@ -9,12 +14,20 @@ public class UserStory {
     @PrimaryKey
     private int id;
 
-    private String userStory;
-    private int estimation;
-    private int pbPriority;
+    private String userStory = null;
+    private int estimation = 0;
+    private int pbPriority = 0;
 
+    Sprint sprint = null;
     
 	public UserStory(int id, String userStory, int estimation, int pbPriority) {
+		this.id = id;
+        this.userStory = userStory;
+        this.estimation = estimation;
+        this.pbPriority = pbPriority;
+	}
+
+    public UserStory(int id, String userStory, int estimation, int pbPriority) {
 		this.id = id;
         this.userStory = userStory;
         this.estimation = estimation;
@@ -47,6 +60,14 @@ public class UserStory {
     }
     public void setPbPriority(int pbPriority) {
         this.pbPriority = pbPriority;
+    }
+
+    public Sprint getSprint() {
+        return this.sprint;
+    }
+
+    public void setSprint(Sprint sprint) {
+        this.sprint = sprint;
     }
 
     public String toString() {
