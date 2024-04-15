@@ -2,7 +2,6 @@
 target/
 .vscode
 .project
-
 #Ignore la configuracion del settings
 settings.json
 
@@ -10,6 +9,5 @@ settings.json
 .settings
 .classpath
 .idea
-.project
 datanucleus.log
 
