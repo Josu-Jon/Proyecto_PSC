@@ -40,7 +40,7 @@ public class Sprint {
     }
 
     public void removeStory(UserStory story){
-        stories.remove(Story);
+        stories.remove(story);
     }
 
     public Set<UserStory> getAllStories() {
