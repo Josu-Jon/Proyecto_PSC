@@ -6,7 +6,6 @@ import javax.jdo.Query;
 import javax.jdo.JDOHelper;
 import javax.jdo.Transaction;
 
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -77,6 +76,7 @@ public class Resource {
 	}
 	*/
 	
+	//Crear una UserStory en la BDD
 	@POST
 	@Path("/registerUserStory")
 	public Response registerUserStory(UserStoryData userStoryData) {
@@ -85,16 +85,19 @@ public class Resource {
             tx.begin();
             logger.info("Checking whether the user already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
+			//Buscamos si existe una User Story ya creada
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
 			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
+				return Response.ok(jonfe.getMessage()).build();
 			}
 
 			logger.info("User Story: {}", story);
-
+			//Si ya existe no hacemos nada, si no existe se crea
 			if (story != null) {
 				logger.info("Story already created: {}", story);
+				return Response.ok("Story alredy created").build();
 			} else {
 				logger.info("Creating story: {}", story);
 				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(), userStoryData.getEstimation(), userStoryData.getPbPriority());
@@ -113,30 +116,30 @@ public class Resource {
       
 		}
 	}
-
-	//Crear una UserStory en la BDD
+/*
+	//Eliminar una UserStory de la BDD
 	@POST
-	@Path("/createUserStory")
-	public Response createUserStory(UserStoryData userStoryData) {
+	@Path("/deleteUserStory")
+	public Response deleteUserStory(int id) {
 		try
         {	
             tx.begin();
             logger.info("Checking whether the user already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
 			try {
-				story = pm.getObjectById(UserStory.class, userStoryData.getId());
+				story = pm.getObjectById(UserStory.class, id);
 			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
-
 			logger.info("User Story: {}", story);
 
-			if (story != null) {
-				logger.info("Story already created: {}", story);
+			if (story == null) {
+				logger.info("Story does not exist");
 			} else {
-				logger.info("Creating story: {}", story);
+				//TODO
+				logger.info("Deleting story: {}", story);
 				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(), userStoryData.getEstimation(), userStoryData.getPbPriority());
-				pm.makePersistent(story);					 
+				pm.de					 
 				logger.info("User Story created: {}", story);
 			}
 			tx.commit();
@@ -151,5 +154,6 @@ public class Resource {
       
 		}
 	}
+*/
 }
 

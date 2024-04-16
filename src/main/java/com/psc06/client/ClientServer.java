@@ -62,7 +62,15 @@ public class ClientServer {
 		}
 	}
 	public void deleteUserStory(int id){
+		WebTarget createUserStoryWebTarget = webTarget.path("deleteUserStory");
+		Invocation.Builder invocationBuilder = createUserStoryWebTarget.request(MediaType.APPLICATION_JSON);
 
+		Response response = invocationBuilder.post(Entity.entity(id, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("User Story correctly deleted");
+		}
 	}
 	public void modifyUserStory(int id, String userStory, int estimation, int pbPriority){
 
