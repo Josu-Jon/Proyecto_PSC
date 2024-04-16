@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import java.util.List;
+
 import com.psc06.pojo.UserStoryData;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +45,11 @@ public class ClientServer {
 		}
 	}
 	public void createUserStory(int id, String userStory, int estimation, int pbPriority){
-		UserStoryData usdAux = new UserStoryData(id, userStory, estimation, pbPriority);
+		UserStoryData usdAux = new UserStoryData();
+		usdAux.setId(id);
+		usdAux.setUserStory(userStory);
+		usdAux.setEstimation(estimation);
+		usdAux.setPbPriority(pbPriority);
 		
 		WebTarget createUserStoryWebTarget = webTarget.path("createUserStory");
 		Invocation.Builder invocationBuilder = createUserStoryWebTarget.request(MediaType.APPLICATION_JSON);
@@ -62,9 +68,9 @@ public class ClientServer {
 
 	}
 	public UserStoryData getUserStory(int id){
-
+		return null;
 	}
 	public List<UserStoryData> getAllUserStorys(){
-
+		return null;
 	}
 }
