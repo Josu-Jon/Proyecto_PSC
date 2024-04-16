@@ -43,7 +43,17 @@ public class ClientServer {
 		}
 	}
 	public void createUserStory(int id, String userStory, int estimation, int pbPriority){
+		UserStoryData usdAux = new UserStoryData(id, userStory, estimation, pbPriority);
+		
+		WebTarget createUserStoryWebTarget = webTarget.path("createUserStory");
+		Invocation.Builder invocationBuilder = createUserStoryWebTarget.request(MediaType.APPLICATION_JSON);
 
+		Response response = invocationBuilder.post(Entity.entity(usdAux, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("User Story correctly created");
+		}
 	}
 	public void deleteUserStory(int id){
 
@@ -51,10 +61,10 @@ public class ClientServer {
 	public void modifyUserStory(int id, String userStory, int estimation, int pbPriority){
 
 	}
-	public void getUserStory(int id){
+	public UserStoryData getUserStory(int id){
 
 	}
-	public void getAllUserStorys(){
+	public List<UserStoryData> getAllUserStorys(){
 
 	}
 }

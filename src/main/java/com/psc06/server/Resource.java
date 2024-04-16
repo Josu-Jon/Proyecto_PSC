@@ -113,13 +113,43 @@ public class Resource {
       
 		}
 	}
-	/* 
-	@GET
-	@Path("/hello")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response sayHello() {
-		return Response.ok("Hello world!").build();
+
+	//Crear una UserStory en la BDD
+	@POST
+	@Path("/createUserStory")
+	public Response createUserStory(UserStoryData userStoryData) {
+		try
+        {	
+            tx.begin();
+            logger.info("Checking whether the user already exits or not: '{}'", userStoryData.getId());
+			UserStory story = null;
+			try {
+				story = pm.getObjectById(UserStory.class, userStoryData.getId());
+			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+				logger.info("Exception launched: {}", jonfe.getMessage());
+			}
+
+			logger.info("User Story: {}", story);
+
+			if (story != null) {
+				logger.info("Story already created: {}", story);
+			} else {
+				logger.info("Creating story: {}", story);
+				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(), userStoryData.getEstimation(), userStoryData.getPbPriority());
+				pm.makePersistent(story);					 
+				logger.info("User Story created: {}", story);
+			}
+			tx.commit();
+			return Response.ok().build();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+      
+		}
 	}
-	*/
 }
 
