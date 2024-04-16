@@ -5,6 +5,7 @@ import javax.jdo.annotations.PrimaryKey;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Persistent;
 import java.util.LinkedHashSet;
+import com.psc06.server.jdo.UserStory;
 
 
 @PersistenceCapable

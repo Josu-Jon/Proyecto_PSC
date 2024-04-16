@@ -6,7 +6,7 @@ import javax.jdo.annotations.Persistent;
 
 import java.util.LinkedHashSet;
 
-import com.psc06.server.UserStory;
+import com.psc06.server.jdo.Sprint;
 
 @PersistenceCapable
 public class UserStory {
