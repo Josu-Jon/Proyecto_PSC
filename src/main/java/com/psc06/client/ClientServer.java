@@ -42,4 +42,19 @@ public class ClientServer {
 			logger.info("User Story correctly created");
 		}
 	}
+	public void createUserStory(int id, String userStory, int estimation, int pbPriority){
+
+	}
+	public void deleteUserStory(int id){
+
+	}
+	public void modifyUserStory(int id, String userStory, int estimation, int pbPriority){
+
+	}
+	public void getUserStory(int id){
+
+	}
+	public void getAllUserStorys(){
+
+	}
 }
