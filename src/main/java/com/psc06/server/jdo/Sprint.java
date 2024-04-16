@@ -47,7 +47,7 @@ public class Sprint {
     public String toString(){
         StringBuilder sprintStories = new StringBuilder();
         for (UserStory story: this.stories) {
-            sprintStories.append(story.toString() + " --- ")
+            sprintStories.append(story.toString() + " --- ");
         }
 
         return "Sprint nº: " + this.num + ", User stories --> [" + sprintStories + "]";

@@ -27,11 +27,12 @@ public class UserStory {
         this.pbPriority = pbPriority;
 	}
 
-    public UserStory(int id, String userStory, int estimation, int pbPriority) {
+    public UserStory(int id, String userStory, int estimation, int pbPriority, Sprint sp) {
 		this.id = id;
         this.userStory = userStory;
         this.estimation = estimation;
         this.pbPriority = pbPriority;
+        this.sprint = sp;
 	}
 
     public int getId() {
