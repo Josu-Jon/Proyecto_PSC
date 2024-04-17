@@ -1,6 +1,6 @@
 **Proyecto de la asignatura de Procesos de Software y Calidad para el grupo PSC_6**
 ===============================
-[![Java CI](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml/badge.svg)](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml)
+[![Java CI](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml/badge.svg)](https://github.com/Josu-Jon/Proyecto_PSC/actions/workflows/main.yml)   [![codecov](https://codecov.io/gh/Josu-Jon/Proyecto_PSC/graph/badge.svg?token=VUYZEI6UJF)](https://codecov.io/gh/Josu-Jon/Proyecto_PSC)
 
 **Crear la base de datos y darle permisos a un usuario**
 
@@ -24,7 +24,7 @@ mvn compile
 
 **Cargar el script que borra la BBDD si existe y la crea de nuevo (IMPORTANTE EJECUTAR ANTES DE DATANUCLEUS)**
 ```
-mysql –uroot -p < sql/create-productsdb.sql
+mysql –uroot -p < sql/create-proyectosdb.sql
 ```
 
 **Obtener la información de las clases de la BBDD**
@@ -39,7 +39,7 @@ mvn datanucleus:schema-create
 
 **Instalar el proyecto para ejecutar el jar**
 ```
-mvn install
+mvn test
 ```
 
 **Lanzar server**
@@ -50,5 +50,4 @@ mvn jetty:run
 ***Lanzar cliente***
 ```
 mvn -Pclient exec:java
-
 ```
