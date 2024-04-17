@@ -2,9 +2,6 @@ package com.psc06.server.jdo;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Persistent;
-
-import java.util.LinkedHashSet;
 
 import com.psc06.server.jdo.Sprint;
 

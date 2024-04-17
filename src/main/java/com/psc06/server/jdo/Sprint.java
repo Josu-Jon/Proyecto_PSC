@@ -1,14 +1,14 @@
 package com.psc06.server.jdo;
 
-import java.util.Set;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Persistent;
 import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import com.psc06.server.jdo.UserStory;
-
 
 @PersistenceCapable
 public class Sprint {
