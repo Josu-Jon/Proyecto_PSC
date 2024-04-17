@@ -9,7 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-
+import com.psc06.pojo.SprintData;
+import com.psc06.pojo.SprintStoryData;
 import com.psc06.pojo.UserStoryData;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +32,8 @@ public class ExampleClient {
 	private static final int est2 = 2;
 	private static final int pb2 = 7;
 
+	// Sprint 1
+	private static final int sprintId = 1;
 
 	private Client client;
 	private WebTarget webTarget;
@@ -57,6 +60,46 @@ public class ExampleClient {
 		}
 	}
 
+	public void registerSprint(int id) {
+		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		SprintData sp = new SprintData();
+		sp.setSprintNum(id);
+
+		Response response = invocationBuilder.post(Entity.entity(sp, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("User Story correctly created");
+		}
+	}
+
+	public void assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
+		WebTarget registerUserWebTarget = webTarget.path("assignUserStory");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		SprintData sp = new SprintData();
+		sp.setSprintNum(id);
+		UserStoryData newStory = new UserStoryData();
+		newStory.setId(id);
+		newStory.setUserStory(userStory);
+		newStory.setEstimation(estimation);
+		newStory.setPbPriority(pbPriority);
+		SprintStoryData sprintStory = new SprintStoryData();
+		sprintStory.setSprintData(sp);
+		sprintStory.setUserStoryData(newStory);
+
+		Response response = invocationBuilder.post(Entity.entity(sprintStory, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("User Story correctly assigned");
+		}
+	}
+
+
+
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			logger.info("Use: java Client.Client [host] [port]");
@@ -67,8 +110,12 @@ public class ExampleClient {
 		String port = args[1];
 
 		ExampleClient conSer = new ExampleClient(hostname, port);
+		conSer.registerSprint(sprintId);
 		conSer.registerUserStory(id1, userstory1, est1, pb1);
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
+		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
+
+
 		
 	}
 }
