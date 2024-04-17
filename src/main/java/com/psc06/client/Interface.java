@@ -13,6 +13,7 @@ public class Interface extends JFrame {
     private JTable usTable;
     private JButton createButton;
     private JButton deleteButton;
+    private JButton editButton;
     private List<UserStory> userStories;
 
     public Interface() {
@@ -27,7 +28,12 @@ public class Interface extends JFrame {
         model.addColumn("Estimación");
         model.addColumn("Eliminar");
 
-        usTable = new JTable(model);
+        usTable = new JTable(model) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; 
+            }
+        };
         JScrollPane scrollPane = new JScrollPane(usTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -53,8 +59,16 @@ public class Interface extends JFrame {
                 }
             }
         });
+        editButton = new JButton("Editar User Story"); 
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usTable.setEditable(true); 
+            }
+        });
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(editButton);
         buttonPanel.add(createButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -96,6 +110,8 @@ public class Interface extends JFrame {
                 dialog.dispose();
             }
         });
+
+
 
         dialog.add(titleLabel);
         dialog.add(titleField);
