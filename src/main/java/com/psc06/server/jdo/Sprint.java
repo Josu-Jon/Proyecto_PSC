@@ -53,7 +53,7 @@ public class Sprint {
             sprintStories.append(story.toString() + " --- ");
         }
 
-        return "Sprint nº: " + this.num + ", User stories --> [" + sprintStories + "]";
+        return String.format("Sprint %s: [%s]", num, sprintStories);
     }
 
 }

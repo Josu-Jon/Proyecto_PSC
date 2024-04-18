@@ -110,6 +110,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.noconnor</groupId>
+      <artifactId>junitperf</artifactId>
+      <version>1.22.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-inline</artifactId>
       <version>4.6.0</version>
@@ -124,10 +130,10 @@
     </dependency>
 
     <dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
 
   </dependencies>
 
@@ -145,6 +151,7 @@
                 <includes>
                   <include>*.log</include>
                   <include>*.ods</include>
+                  <include>*.properties</include>
                 </includes>
               </fileset>
             </filesets>
@@ -167,6 +174,7 @@
           <artifactId>datanucleus-maven-plugin</artifactId>
           <version>6.0.0-release</version>
           <configuration>
+            <fork>false</fork>
             <api>JDO</api>
             <verbose>true</verbose>
             <props>${config.files.dir}/datanucleus.properties</props>

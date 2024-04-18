@@ -27,6 +27,11 @@ mvn compile
 mysql –uroot -p < sql/create-proyectosdb.sql
 ```
 
+**Instalar el proyecto para ejecutar el jar**
+```
+mvn test
+```
+
 **Obtener la información de las clases de la BBDD**
 ```
 mvn datanucleus:enhance
@@ -37,9 +42,19 @@ mvn datanucleus:enhance
 mvn datanucleus:schema-create
 ```
 
-**Instalar el proyecto para ejecutar el jar**
+**Crear las tablas de la base de datos**
 ```
-mvn test
+mvn datanucleus:schema-create
+```
+
+**Lanzar los test de integración**
+```
+mvn verify -Pperformance-tests
+```
+
+**Lanzar los test de rendimiento**
+```
+mvn verify -Pperformance-tests
 ```
 
 **Lanzar server**

@@ -69,7 +69,8 @@ public class UserStory {
     }
 
     public String toString() {
-        return "User story: " + this.userStory + " [Estimación: " + this.estimation + "y prioridad: " + this.pbPriority + "]";
+        return String.format("User Story %s (%s): [Estimacion: %s. Prioridad: %s.]", 
+        this.id, this.userStory, this.estimation, this.pbPriority);
     }
 
 }
