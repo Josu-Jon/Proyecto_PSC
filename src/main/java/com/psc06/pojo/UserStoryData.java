@@ -11,10 +11,6 @@ public class UserStoryData {
         // Serialization
     }
 
-    public UserStoryData(int i, String string, int j, int k) {
-        //TODO Auto-generated constructor stub
-    }
-
     public int getId() {
         return id;
     }

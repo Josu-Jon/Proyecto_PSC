@@ -8,6 +8,7 @@ import org.junit.Test;
 public class UserStoryDataTest {
     
     UserStoryData userStory;
+    UserStoryData userStory2;
 
     @Before
     public void SetUp(){
