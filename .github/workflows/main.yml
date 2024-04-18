@@ -19,6 +19,8 @@ jobs:
         run: mvn --batch-mode --update-snapshots package
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
+      - name: Run the Maven Test phase
+        run: mvn -B test
       - name: Upload report to Codecov with Jacoco #Upload coverage report from JaCoCo to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
