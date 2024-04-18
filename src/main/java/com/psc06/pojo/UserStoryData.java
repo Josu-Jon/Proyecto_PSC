@@ -11,6 +11,10 @@ public class UserStoryData {
         // Serialization
     }
 
+    public UserStoryData(int i, String string, int j, int k) {
+        //TODO Auto-generated constructor stub
+    }
+
     public int getId() {
         return id;
     }
@@ -40,7 +44,8 @@ public class UserStoryData {
     }
 
     public String toString() {
-        return "User story: " + this.userStory + " [Estimación: " + this.estimation + "y prioridad: " + this.pbPriority + "]";
+        return String.format("User Story %s (%s): [Estimacion: %s. Prioridad: %s.]", 
+        this.id, this.userStory, this.estimation, this.pbPriority);
     }
 
 }
