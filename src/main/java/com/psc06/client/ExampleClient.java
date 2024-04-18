@@ -55,10 +55,11 @@ public class ExampleClient {
 		newStory.setEstimation(estimation);
 		newStory.setPbPriority(pbPriority);
 		Response response = invocationBuilder.post(Entity.entity(newStory, MediaType.APPLICATION_JSON));
+
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User Story correctly created");
+			logger.info("User Story correctly created. ");
 		}
 	}
 
@@ -73,7 +74,7 @@ public class ExampleClient {
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User Story correctly created");
+			logger.info("Sprint correctly created. ");
 		}
 	}
 
@@ -96,7 +97,7 @@ public class ExampleClient {
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User Story correctly assigned");
+			logger.info("User Story correctly assigned. ");
 		}
 	}
 
@@ -112,7 +113,7 @@ public class ExampleClient {
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("Sprint " + sp.getSprintNum() + " deleted.");
+			logger.info("Sprint " + sp.getSprintNum() + " deleted. ");
 		}
 	}
 
@@ -127,7 +128,7 @@ public class ExampleClient {
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User Story " + story.getId() + " deleted.");
+			logger.info("User Story " + story.getId() + " deleted. ");
 		}
 	}
 
@@ -150,7 +151,7 @@ public class ExampleClient {
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
-			logger.info("User Story correctly deleted from sprint. ");
+			logger.info("User Story " + id + " correctly deleted from sprint " + sprintId + ". ");
 		}
 	}
 

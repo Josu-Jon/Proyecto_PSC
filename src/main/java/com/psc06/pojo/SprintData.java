@@ -17,7 +17,7 @@ public class SprintData {
     }
 
     public String toString(){
-        return "Sprint número " + this.sprintNum;
+        return String.format("Sprint %s. ", this.sprintNum);
     }
 
 }
