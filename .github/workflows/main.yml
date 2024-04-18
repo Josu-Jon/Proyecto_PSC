@@ -15,20 +15,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Clean with Maven
-        run: mvn clean
-      - name: Compile with Maven
-        run: mvn compile
-      - name: Create database with sql file
-        run: mysql –uroot -p < sql/create-proyectosdb.sql
-      - name: Enhance with datanucleus
-        run: mvn datanucleus:enhance
-      - name: Create tables with datanucleus
-        run: mvn datanucleus:schema-create
-      - name: Execute tests
-        run: mvn test
-      - name: Execute Server 
-        run: mvn jetty:run
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots package
+      - name: Run the Maven verify phase
+        run: mvn --batch-mode --update-snapshots verify
       - name: Upload report to Codecov with Jacoco #Upload coverage report from JaCoCo to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
