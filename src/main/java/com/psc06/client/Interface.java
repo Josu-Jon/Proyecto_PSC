@@ -53,6 +53,7 @@ public class Interface extends JFrame {
 
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
+                    ClientServer.deleteUserStory();
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
@@ -64,6 +65,7 @@ public class Interface extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 usTable.setEditable(true); 
+                ClientServer.modifyUserStory();
             }
         });
 
@@ -106,7 +108,7 @@ public class Interface extends JFrame {
 
                 userStories.add(new UserStory(title, priority, estimation));
                 updateUserStoriesTable();
-
+                ClientServer.createUserStory();
                 dialog.dispose();
             }
         });
