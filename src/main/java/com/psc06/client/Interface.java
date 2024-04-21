@@ -110,7 +110,13 @@ public class Interface extends JFrame {
                 dialog.dispose();
             }
         });
-
+        JButton cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
 
 
         dialog.add(titleLabel);
@@ -119,7 +125,7 @@ public class Interface extends JFrame {
         dialog.add(priorityField);
         dialog.add(estimationLabel);
         dialog.add(estimationField);
-        dialog.add(new JLabel()); 
+        dialog.add(cancelButton);
         dialog.add(createButton);
 
         dialog.setVisible(true);
