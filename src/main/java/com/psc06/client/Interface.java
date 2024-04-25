@@ -23,6 +23,7 @@ public class Interface extends JFrame {
         setLayout(new BorderLayout());
 
         DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
         model.addColumn("Título");
         model.addColumn("Prioridad");
         model.addColumn("Estimación");
@@ -53,21 +54,34 @@ public class Interface extends JFrame {
 
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    ClientServer.deleteUserStory();
+                    int id = (int) usTable.getValueAt(selectedRow, 0); 
+                    ClientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
-        editButton = new JButton("Editar User Story"); 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                usTable.setEditable(true); 
-                ClientServer.modifyUserStory();
-            }
-        });
+    editButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        int selectedRow = usTable.getSelectedRow();
+        if (selectedRow == -1) {
+
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        usTable.setEditable(true);
+        int id = (int) usTable.getValueAt(selectedRow, 0); 
+        String userStory = (String) usTable.getValueAt(selectedRow, 1); 
+        int estimation = (int) usTable.getValueAt(selectedRow, 2); 
+        int pbPriority = (int) usTable.getValueAt(selectedRow, 3); 
+
+
+        ClientServer.modifyUserStory(id, userStory, estimation, pbPriority);
+    }
+});
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(editButton);
@@ -108,7 +122,7 @@ public class Interface extends JFrame {
 
                 userStories.add(new UserStory(title, priority, estimation));
                 updateUserStoriesTable();
-                ClientServer.createUserStory();
+                ClientServer.registerUserStory(id, title, priority, estimation);
                 dialog.dispose();
             }
         });
