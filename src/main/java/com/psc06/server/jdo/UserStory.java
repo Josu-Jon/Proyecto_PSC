@@ -68,6 +68,10 @@ public class UserStory {
         this.sprint = sprint;
     }
 
+    public void deleteSprint() {
+        this.sprint = null;
+    }
+
     public String toString() {
         return String.format("User Story %s (%s): [Estimacion: %s. Prioridad: %s.]", 
         this.id, this.userStory, this.estimation, this.pbPriority);
