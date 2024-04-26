@@ -14,7 +14,7 @@ public class Interface extends JFrame {
     private JButton createButton;
     private JButton deleteButton;
     private JButton editButton;
-    private List<UserStory> userStories;
+    private List<UserStoryData> userStories;
 
     public Interface() {
         setTitle("Product Backlog");
@@ -89,11 +89,7 @@ public class Interface extends JFrame {
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // prueba
-        userStories = new ArrayList<>();
-        userStories.add(new UserStory("US1", 1, 5));
-        userStories.add(new UserStory("US2", 2, 8));
-        userStories.add(new UserStory("US3", 3, 3));
+        userStories = ClientServer.getAllUserStorys();
         updateUserStoriesTable();
 
         setVisible(true);
@@ -149,9 +145,9 @@ public class Interface extends JFrame {
 
     private void updateUserStoriesTable() {
         DefaultTableModel model = (DefaultTableModel) usTable.getModel();
-        model.setRowCount(0); 
-        for (UserStory us : userStories) {
-            model.addRow(new Object[]{us.getTitle(), us.getPriority(), us.getEstimation(), "Eliminar"});
+        model.setRowCount(0);
+        for (UserStoryData usd : userStories) {
+            model.addRow(new Object[]{usd.getId(), usd.getTitle(), usd.getPriority(), usd.getEstimation(), "Eliminar"});
         }
     }
 
