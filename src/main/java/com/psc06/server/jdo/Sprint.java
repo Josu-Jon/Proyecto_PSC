@@ -20,7 +20,7 @@ public class Sprint {
 	@Join
     Set<UserStory> stories = new LinkedHashSet<>();
 
-    public Sprint (){
+    Sprint (){
     }
 
     public Sprint (int num) {

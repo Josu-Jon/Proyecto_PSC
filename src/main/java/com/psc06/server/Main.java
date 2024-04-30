@@ -8,7 +8,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-// Used for real tests on mvn test
+// Used for real tests on server performance and integration test on the maven profiles
 public class Main {
  
     // Base URI the Grizzly HTTP server will listen on
