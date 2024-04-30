@@ -16,7 +16,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: create database in mysql-server
-        run: mysql -uroot -h127.0.0.1 < src/sql/create-proyectosdb.sql
+        run: mysql -uroot -h127.0.0.1 < sql/create-proyectosdb.sql
       - name: compile the code
         run: mvn clean compile
       - name: Create Datanucleus enhance
