@@ -159,7 +159,7 @@ public class Resource {
 		try
         {	
             tx.begin();
-            logger.info("Checking whether the user story already exits or not: '{}'", userStoryData.getId());
+            logger.info("Checking whether the userstory already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
@@ -293,10 +293,10 @@ public class Resource {
 
 	}
 
-/*
+/* 
 	@GET
 	@Path("/getAllUserStories")
-	public ArrayList<UserStory> getAllUserStories() {
+	public Response getAllUserStories() {
 
 		ArrayList<UserStory> returnedList =null, userStories = null;
 
@@ -331,18 +331,20 @@ public class Resource {
 		return returnedList;
 	}
 
-	
+
 	@GET
-	@Path("/getUserStory")
+	@Path("/getUserStoriesFromSprint")
 	public Response getUserStory(SprintData sprint) {
 		
 	}
 
-	@POST
-	@Path("/setUserStoryParams")
-	public Response setUserStoryParams(UserStoryData userStoryData) {
-		
-	}
 	*/
+
+	@GET
+	@Path("/test")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response sayHello() {
+		return Response.ok("Test!").build();
+	}
 }
 

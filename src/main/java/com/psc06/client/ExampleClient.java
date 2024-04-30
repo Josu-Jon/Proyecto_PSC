@@ -21,6 +21,8 @@ import com.psc06.server.jdo.UserStory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
+
 public class ExampleClient {
 
 	protected static final Logger logger = LogManager.getLogger();
@@ -160,30 +162,18 @@ public class ExampleClient {
 /*
 	public ArrayList<UserStoryData> getAllUserStories() {
 
-		ArrayList<UserStoryData> userStoryDataList = null;
-
 		WebTarget registerUserWebTarget = webTarget.path("getAllUserStories");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
-		ArrayList<UserStory> userStories = invocationBuilder.get();
+		Response response = invocationBuilder.get(UserStoryData.class);
+		
+		JSonPath jsonPathEvaluator = response.jsonPath();
 
-		userStoryDataList = new ArrayList<UserStoryData>();
+		ArrayList<UserStory> allStories = jsonPathEvaluator.getList("", UserStoryData.class); 
 
-		for(UserStory us: userStories){
-			UserStoryData storydata = new UserStoryData();
-			storydata.setId(us.getId());
-			storydata.setUserStory(us.getUserStory());
-			storydata.setEstimation(us.getEstimation());
-			storydata.setPbPriority(us.getPbPriority());
-
-			userStoryDataList.add(storydata);
-			logger.info("User Story " + storydata.getId() + ": " +  storydata.getUserStory());
-		}
-
-		return userStoryDataList;
 	}
-*/
 
+*/
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			logger.info("Use: java Client.Client [host] [port]");
