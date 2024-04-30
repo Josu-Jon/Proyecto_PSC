@@ -343,7 +343,7 @@ public class Resource {
 	@GET
 	@Path("/test")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response sayHello() {
+	public Response sayTest() {
 		return Response.ok("Test!").build();
 	}
 }

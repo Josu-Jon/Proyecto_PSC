@@ -59,6 +59,13 @@ public class ResourceTest {
     }
 
     @Test
+    public void testSayTest() {
+        Response response = resource.sayTest();
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+        assertEquals("Test!", response.getEntity().toString());
+    }
+
+    @Test
     public void testRegisterSprint(){
 
         // Preparamos el persistence manager para devolver el mock

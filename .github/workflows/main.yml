@@ -15,10 +15,22 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots package
-      - name: Run the Maven verify phase
-        run: mvn --batch-mode --update-snapshots verify
+      - name: create database in mysql-server
+        run: mysql -uroot -h127.0.0.1 < src/sql/create-proyectosdb.sql
+      - name: compile the code
+        run: mvn clean compile
+      - name: Create Datanucleus enhance
+        run: mvn datanucleus:enhance
+      - name: Create Datanucleus schema
+        run: mvn datanucleus:schema-create
+      - name: Launch the server in background mode 
+        run: mvn jetty:run &
+      - name: Sleep for 10 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '10s'
+      - name: Launch the client
+        run: mvn exec:java -Pclient
       - name: Run the Maven test phase
         run: mvn test
       - name: Upload report to Codecov with Jacoco #Upload coverage report from JaCoCo to Codecov
