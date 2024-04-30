@@ -50,7 +50,7 @@ public class Resource {
 			Sprint sprint = null;
 			try {
 				sprint = pm.getObjectById(Sprint.class, sprintData.getSprintNum());
-			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+			} catch (JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
 			
@@ -81,11 +81,11 @@ public class Resource {
 		try
         {	
             tx.begin();
-            logger.info("Checking whether the user already exits or not: '{}'", sprintData.getSprintNum());
+            logger.info("Checking whether the Sprint already exits: '{}'", sprintData.getSprintNum());
 			Sprint sprint = null;
 			try {
 				sprint = pm.getObjectById(Sprint.class, sprintData.getSprintNum());
-			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+			} catch (JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
 
@@ -114,11 +114,11 @@ public class Resource {
 		try
         {	
             tx.begin();
-            logger.info("Checking whether the user already exits or not: '{}'", userStoryData.getId());
+            logger.info("Checking whether the UserStory already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
-			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+			} catch (JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
 
@@ -161,7 +161,7 @@ public class Resource {
 			UserStory story = null;
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
-			} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+			} catch (JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
 
@@ -204,7 +204,7 @@ public class Resource {
 					
 					try {
 						story = pm.getObjectById(UserStory.class, sprintStoryData.getUserStoryData().getId());
-					} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+					} catch (JDOObjectNotFoundException jonfe) {
 						logger.info("Exception launched: {}", jonfe.getMessage());
 					}
 
@@ -263,7 +263,7 @@ public class Resource {
 					
 					try {
 						story = pm.getObjectById(UserStory.class, sprintStoryData.getUserStoryData().getId());
-					} catch (javax.jdo.JDOObjectNotFoundException jonfe) {
+					} catch (JDOObjectNotFoundException jonfe) {
 						logger.info("Exception launched: {}", jonfe.getMessage());
 					}
 
