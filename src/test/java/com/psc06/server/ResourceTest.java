@@ -149,7 +149,7 @@ public class ResourceTest {
 
         UserStory userStory = spy(UserStory.class);
         // Simulamos que el objeto no esta en la BBDD
-        when(persistenceManager.getObjectById(UserStory.class, sprintData.getSprintNum())).thenReturn(userStory);
+        when(persistenceManager.getObjectById(UserStory.class)).thenReturn(userStory);
 
         //Llamamos al metodo a testear
         response = resource.deleteUserStory(userStoryData);
