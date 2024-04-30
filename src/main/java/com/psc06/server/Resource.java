@@ -1,5 +1,7 @@
 package com.psc06.server;
 
+import java.util.*;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -291,13 +293,12 @@ public class Resource {
 
 	}
 
-
-	@SuppressWarnings("unchecked")
+/*
 	@GET
 	@Path("/getAllUserStories")
-	public Query<UserStory> getAllUserStories() {
+	public ArrayList<UserStory> getAllUserStories() {
 
-		Query<UserStory> queryUserStory = null;
+		ArrayList<UserStory> returnedList =null, userStories = null;
 
 		try {
 			tx.begin();
@@ -305,14 +306,16 @@ public class Resource {
 
 			try (Query<?> q = pm.newQuery(UserStory.class)) {
 				
-				if (q != null) {
-					queryUserStory = (Query<UserStory>) q.execute();
-					logger.info("User Stories retrieved.");
+				userStories = (ArrayList<UserStory>) q.execute();
+				logger.info("User Stories retrieved.");
+
+				returnedList = new ArrayList<UserStory>();
+				
+				for (UserStory us: userStories){
+					returnedList.add(pm.detachCopy(us));
 				}
 				
-				if (queryUserStory != null) {
-					return queryUserStory;
-				}
+				return returnedList;
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -325,10 +328,10 @@ public class Resource {
 			}
 		}
 
-		return null;
+		return returnedList;
 	}
 
-	/*
+	
 	@GET
 	@Path("/getUserStory")
 	public Response getUserStory(SprintData sprint) {

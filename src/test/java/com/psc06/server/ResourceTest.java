@@ -154,4 +154,120 @@ public class ResourceTest {
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
 
+    @Test
+    public void testAssignUserStory(){
+
+        // Simulamos que el objeto no esta en la BBDD
+        @SuppressWarnings("unchecked") 
+        Query<Sprint> query = mock(Query.class);
+        when(persistenceManager.newQuery(Sprint.class)).thenReturn(query);
+
+        Sprint sprint = new Sprint(1);
+        when(query.execute(sprint.getSprintNum())).thenReturn(sprint);
+
+        // Preparamos el persistence manager para devolver el mock
+        SprintStoryData sprintStoryData = new SprintStoryData();
+        UserStoryData userStoryData = new UserStoryData();
+        userStoryData.setEstimation(3);
+        userStoryData.setPbPriority(2);
+        userStoryData.setUserStory("Test");
+        userStoryData.setId(1);
+        SprintData sp = new SprintData();
+        sp.setSprintNum(1);
+        sprintStoryData.setSprintData(sp);
+        sprintStoryData.setUserStoryData(userStoryData);
+        
+        // Preparamos el comportamiento del mock
+        when(transaction.isActive()).thenReturn(false);
+
+        //Llamamos al metodo a testear
+        Response response = resource.assignUserStory(sprintStoryData);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(query).setFilter(stringCaptor.capture());
+        assertEquals("this.num == :num", stringCaptor.getValue());
+
+        ArgumentCaptor<Boolean> uniqueCaptor = ArgumentCaptor.forClass(Boolean.class);
+        verify(query).setUnique(uniqueCaptor.capture());
+        assertTrue(uniqueCaptor.getValue());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    public void testReassignUserStory(){
+
+        // Simulamos que el objeto no esta en la BBDD
+        @SuppressWarnings("unchecked") 
+        Query<Sprint> query = mock(Query.class);
+        when(persistenceManager.newQuery(Sprint.class)).thenReturn(query);
+
+        Sprint sprint = new Sprint(1);
+        when(query.execute(sprint.getSprintNum())).thenReturn(sprint);
+
+        // Preparamos el persistence manager para devolver el mock
+        SprintStoryData sprintStoryData = new SprintStoryData();
+        UserStoryData userStoryData = new UserStoryData();
+        userStoryData.setEstimation(3);
+        userStoryData.setPbPriority(2);
+        userStoryData.setUserStory("Test");
+        userStoryData.setId(1);
+        SprintData sp = new SprintData();
+        sp.setSprintNum(1);
+        sprintStoryData.setSprintData(sp);
+        sprintStoryData.setUserStoryData(userStoryData);
+        
+        // Preparamos el comportamiento del mock
+        when(transaction.isActive()).thenReturn(false);
+
+        //Llamamos al metodo a testear
+        Response response = resource.reassignUserStory(sprintStoryData);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(query).setFilter(stringCaptor.capture());
+        assertEquals("this.num == :num", stringCaptor.getValue());
+
+        ArgumentCaptor<Boolean> uniqueCaptor = ArgumentCaptor.forClass(Boolean.class);
+        verify(query).setUnique(uniqueCaptor.capture());
+        assertTrue(uniqueCaptor.getValue());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+/*
+    @Test
+    public void testGetAllUserStory(){
+
+        // Preparamos el persistence manager para devolver el mock
+        UserStoryData userStoryData = new UserStoryData();
+        userStoryData.setEstimation(3);
+        userStoryData.setPbPriority(2);
+        userStoryData.setUserStory("Test");
+        userStoryData.setId(1);
+
+        // Simulamos que el objeto no esta en la BBDD
+        when(persistenceManager.getObjectById(UserStory.class)).thenThrow(new JDOObjectNotFoundException());
+        
+        // Preparamos el mock
+        when(transaction.isActive()).thenReturn(true);
+
+        //Llamamos al metodo a testear
+        Response response = resource.registerUserStory(userStoryData);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<UserStory> usCaptor = ArgumentCaptor.forClass(UserStory.class);
+        verify(persistenceManager).makePersistent(usCaptor.capture());
+        assertEquals(1, usCaptor.getValue().getId());
+        assertEquals("Test", usCaptor.getValue().getUserStory());
+        assertEquals(3, usCaptor.getValue().getEstimation());
+        assertEquals(2, usCaptor.getValue().getPbPriority());
+
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+*/
 }

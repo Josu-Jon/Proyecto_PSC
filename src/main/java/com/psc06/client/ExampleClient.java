@@ -1,5 +1,7 @@
 package com.psc06.client;
 
+import java.util.*;
+
 import javax.jdo.Query;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,6 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.GenericType;
 
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.SprintStoryData;
@@ -154,7 +157,32 @@ public class ExampleClient {
 			logger.info("User Story " + id + " correctly deleted from sprint " + sprintId + ". ");
 		}
 	}
+/*
+	public ArrayList<UserStoryData> getAllUserStories() {
 
+		ArrayList<UserStoryData> userStoryDataList = null;
+
+		WebTarget registerUserWebTarget = webTarget.path("getAllUserStories");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+
+		ArrayList<UserStory> userStories = invocationBuilder.get();
+
+		userStoryDataList = new ArrayList<UserStoryData>();
+
+		for(UserStory us: userStories){
+			UserStoryData storydata = new UserStoryData();
+			storydata.setId(us.getId());
+			storydata.setUserStory(us.getUserStory());
+			storydata.setEstimation(us.getEstimation());
+			storydata.setPbPriority(us.getPbPriority());
+
+			userStoryDataList.add(storydata);
+			logger.info("User Story " + storydata.getId() + ": " +  storydata.getUserStory());
+		}
+
+		return userStoryDataList;
+	}
+*/
 
 	public static void main(String[] args) {
 		if (args.length != 2) {
@@ -164,6 +192,7 @@ public class ExampleClient {
 
 		String hostname = args[0];
 		String port = args[1];
+		ArrayList<UserStoryData> us = new ArrayList<UserStoryData>();
 
 		ExampleClient conSer = new ExampleClient(hostname, port);
 		conSer.registerSprint(sprintId);
@@ -171,6 +200,8 @@ public class ExampleClient {
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
 		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
 		conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
+
+		//us = conSer.getAllUserStories();
 		
 	}
 }
