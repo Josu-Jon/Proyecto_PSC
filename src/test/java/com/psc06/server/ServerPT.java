@@ -23,7 +23,7 @@ import com.psc06.server.jdo.UserStory;
 import categories.PerformanceTest;
 
 @Category(PerformanceTest.class)
-public class ServerPerformanceTest {
+public class ServerPT {
     
     private static final PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
     

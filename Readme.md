@@ -49,7 +49,7 @@ mvn test
 
 **Lanzar los test de integración (Se lanzan con el Main de Grizzly)**
 ```
-mvn verify -Pperformance-tests
+mvn verify -Pintegration-tests
 ```
 
 **Lanzar los test de rendimiento (Se lanzan con el Main de Grizzly)**

@@ -149,13 +149,12 @@
       <artifactId>rest-assured-all</artifactId>
       <version>5.4.0</version>
     </dependency>
-    
+
   </dependencies>
 
   <build>
     <pluginManagement>
       <plugins>
-
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.2.0</version>
@@ -272,59 +271,60 @@
 
   <!-- Perfiles que se lanzan como -Pnombredelperfil -->
   <profiles>
+
     <!-- Exec as -Pintegration-tests to run the integration-tests -->
     <profile>
-      <id>integration-tests</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.22.0</version>
-            <configuration>
+			<id>integration-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.22.0</version>
+						<configuration>
               <includes>
-                <include>**/*</include>
-              </includes>
-              <groups>categories.IntegrationTest</groups>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+								<include>**/*</include>
+							</includes>
+							<groups>categories.IntegrationTest</groups>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
     <!-- Exec as -Pperformance-tests to run the performance-tests -->
     <profile>
-      <id>performance-tests</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.22.0</version>
-            <configuration>
-              <includes>
-                <include>**/*</include>
-              </includes>
-              <groups>categories.PerformanceTest</groups>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+			<id>performance-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.22.0</version>
+						<configuration>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<groups>categories.PerformanceTest</groups>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
     <!-- Exec as -Pclient to run client -->
     <profile>

@@ -18,7 +18,7 @@ public class Sprint {
     
     @Persistent(mappedBy="sprint", dependentElement="false")
 	@Join
-    List<UserStory> stories = new ArrayList<>();
+    Set<UserStory> stories = new LinkedHashSet<>();
 
     Sprint (){
     }
@@ -43,7 +43,7 @@ public class Sprint {
         stories.remove(story);
     }
 
-    public List<UserStory> getAllStories() {
+    public Set<UserStory> getAllStories() {
         return this.stories;
     }
 

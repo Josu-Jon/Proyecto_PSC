@@ -32,7 +32,7 @@ import com.psc06.server.jdo.UserStory;
 import categories.IntegrationTest;
 
 @Category(IntegrationTest.class)
-public class ServerIntegrationTest {
+public class ServerIT {
     
     private static final PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
     
