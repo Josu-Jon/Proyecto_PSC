@@ -168,28 +168,5 @@ public class ClientServer {
 
 		return stories;
 	}
-/*
-	public List<UserStoryData> getUserStoriesFromSprint(int sprintId) {
 
-		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
-		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
-		
-		SprintData sp = new SprintData();
-		sp.setSprintNum(sprintId);
-
-		Response response = invocationBuilder.post(Entity.entity(sp, MediaType.APPLICATION_JSON));
-
-		String listString = response.readEntity(String.class);
-
-		logger.info(listString);
-
-		Gson gson = new Gson();
-		// create the type for the collection. In this case define that the collection is of type Dataset
-		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
-		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
-		
-		return stories;
-	}
-
-*/
 }
