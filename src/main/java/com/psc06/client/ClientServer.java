@@ -111,20 +111,7 @@ public class ClientServer {
 		}
 	}
 
-	public void deleteUserStory(int id) {
-		WebTarget registerUserWebTarget = webTarget.path("deleteUserStory");
-		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
-		UserStoryData story = new UserStoryData();
-		story.setId(id);
-
-		Response response = invocationBuilder.post(Entity.entity(story, MediaType.APPLICATION_JSON));
-		if (response.getStatus() != Status.OK.getStatusCode()) {
-			logger.error("Error connecting with the server. Code: {}", response.getStatus());
-		} else {
-			logger.info("User Story " + story.getId() + " deleted. ");
-		}
-	}
 
 	public void reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
@@ -149,7 +136,25 @@ public class ClientServer {
 		}
 	}
 
+	public List<UserStoryData> getAllUserStories() {
 
+		WebTarget registerUserWebTarget = webTarget.path("getAllUserStories");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+
+		Response response = invocationBuilder.get();
+		String listString= response.readEntity(String.class);
+
+		Gson gson = new Gson();
+		// create the type for the collection. In this case define that the collection is of type Dataset
+		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
+		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
+		
+		for (UserStoryData us : stories) {
+			logger.info(us.toString());
+		}
+
+		return stories;
+	}
 /*
 	public List<UserStoryData> getUserStoriesFromSprint(int sprintId) {
 
