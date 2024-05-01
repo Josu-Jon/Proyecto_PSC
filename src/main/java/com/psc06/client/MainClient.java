@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class MainClient {
 
-	private static final sprintId = 1;
+	private static final int sprintId = 1;
 
     // Userstory 1
 	private static final int id1 = 1;
