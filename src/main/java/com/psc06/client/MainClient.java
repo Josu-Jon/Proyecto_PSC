@@ -22,6 +22,7 @@ public class MainClient {
     protected static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
+		
 		if (args.length != 2) {
 			logger.info("Use: java Client.Client [host] [port]");
 			System.exit(0);
@@ -31,8 +32,15 @@ public class MainClient {
 		String port = args[1];
 
 		ClientServer conSer = new ClientServer(hostname, port);
+		conSer.registerSprint(sprintId);
 		conSer.registerUserStory(id1, userstory1, est1, pb1);
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
+		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
+		//conSer.getUserStoriesFromSprint(sprintId);
+		conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
+
+		conSer.getAllUserStories();
+		
 		
 	}
 }
