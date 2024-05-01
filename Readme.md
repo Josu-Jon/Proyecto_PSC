@@ -22,7 +22,7 @@ mvn clean
 mvn compile
 ```
 
-**Cargar el script que borra la BBDD si existe y la crea de nuevo (IMPORTANTE EJECUTAR ANTES DE DATANUCLEUS)**
+**Cargar el script que borra la BBDD si existe y la crea de nuevo (IMPORTANTE EJECUTAR ANTES DE DATANUCLEUS) (SOLO PARA GITHUB ACTIONS)**
 ```
 mysql –uroot -p < sql/create-proyectosdb.sql
 ```
@@ -42,17 +42,17 @@ mvn datanucleus:enhance
 mvn datanucleus:schema-create
 ```
 
-**Crear las tablas de la base de datos**
+**Lanzamos los test individuales**
 ```
-mvn datanucleus:schema-create
+mvn test
 ```
 
-**Lanzar los test de integración**
+**Lanzar los test de integración (Se lanzan con el Main de Grizzly)**
 ```
 mvn verify -Pperformance-tests
 ```
 
-**Lanzar los test de rendimiento**
+**Lanzar los test de rendimiento (Se lanzan con el Main de Grizzly)**
 ```
 mvn verify -Pperformance-tests
 ```
