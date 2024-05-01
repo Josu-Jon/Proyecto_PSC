@@ -47,15 +47,13 @@ public class Interface extends JFrame {
             }
         });
 
-
         deleteButton = new JButton("Eliminar User Story");
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    int id = (int) usTable.getValueAt(selectedRow, 0); 
+                    int id = userStories.get(selectedRow).getId();
                     ClientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
@@ -63,26 +61,24 @@ public class Interface extends JFrame {
                 }
             }
         });
-    editButton.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
-        int selectedRow = usTable.getSelectedRow();
-        if (selectedRow == -1) {
-
-            JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        usTable.setEditable(true);
-        int id = (int) usTable.getValueAt(selectedRow, 0); 
-        String userStory = (String) usTable.getValueAt(selectedRow, 1); 
-        int estimation = (int) usTable.getValueAt(selectedRow, 2); 
-        int pbPriority = (int) usTable.getValueAt(selectedRow, 3); 
-
-
-        ClientServer.modifyUserStory(id, userStory, estimation, pbPriority);
-    }
-});
+        editButton = new JButton("Editar User Story");
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = usTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                UserStoryData selectedStory = userStories.get(selectedRow);
+                int id = selectedStory.getId();
+                String userStory = selectedStory.getUserStory();
+                int estimation = selectedStory.getEstimation();
+                int pbPriority = selectedStory.getPbPriority();
+                ClientServer.modifyUserStory(id, userStory, estimation, pbPriority);
+            }
+        });
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(editButton);
@@ -117,7 +113,7 @@ public class Interface extends JFrame {
                 int priority = Integer.parseInt(priorityField.getText());
                 int estimation = Integer.parseInt(estimationField.getText());
 
-                userStories.add(new UserStory(title, priority, estimation));
+                userStories.add(new UserStoryData(title, priority, estimation));
                 updateUserStoriesTable();
                 ClientServer.registerUserStory(id, title, priority, estimation);
                 dialog.dispose();
@@ -130,7 +126,6 @@ public class Interface extends JFrame {
                 dialog.dispose();
             }
         });
-
 
         dialog.add(titleLabel);
         dialog.add(titleField);
@@ -151,6 +146,5 @@ public class Interface extends JFrame {
             model.addRow(new Object[]{usd.getId(), usd.getTitle(), usd.getPriority(), usd.getEstimation(), "Eliminar"});
         }
     }
-
 }
 
