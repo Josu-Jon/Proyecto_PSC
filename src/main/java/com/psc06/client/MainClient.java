@@ -2,6 +2,7 @@ package com.psc06.client;
 
 import com.psc06.pojo.UserStoryData;
 import com.psc06.client.ClientServer;
+import com.psc06.client.Interface;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,9 @@ public class MainClient {
 		ClientServer conSer = new ClientServer(hostname, port);
 		conSer.registerUserStory(id1, userstory1, est1, pb1);
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
-		
-	}
+
+		// Crear la interfaz y mostrarla
+		Interface interface = new Interface(conSer);
+    }
 }
+

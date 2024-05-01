@@ -17,7 +17,8 @@ public class Interface extends JFrame {
     private JButton editButton;
     private List<UserStoryData> userStories;
 
-    public Interface() {
+    public Interface(ClientServer clientServer) {
+
         setTitle("Product Backlog");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
@@ -54,7 +55,7 @@ public class Interface extends JFrame {
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int id = userStories.get(selectedRow).getId();
-                    ClientServer.deleteUserStory(id);
+                    //ClientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
@@ -76,7 +77,7 @@ public class Interface extends JFrame {
                 String userStory = selectedStory.getUserStory();
                 int estimation = selectedStory.getEstimation();
                 int pbPriority = selectedStory.getPbPriority();
-                ClientServer.modifyUserStory(id, userStory, estimation, pbPriority);
+                //ClientServer.modifyUserStory(id, userStory, estimation, pbPriority);
             }
         });
 
@@ -86,7 +87,7 @@ public class Interface extends JFrame {
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        userStories = ClientServer.getAllUserStorys();
+        //userStories = ClientServer.getAllUserStorys();
         updateUserStoriesTable();
 
         setVisible(true);
