@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import com.psc06.server.jdo.UserStory;
-import com.psc06.client.pojo.UserStoryData;
+import com.psc06.pojo.UserStoryData;
 
 public class Interface extends JFrame {
     private JTable usTable;
