@@ -143,7 +143,7 @@ public class Interface extends JFrame {
         DefaultTableModel model = (DefaultTableModel) usTable.getModel();
         model.setRowCount(0);
         for (UserStoryData usd : userStories) {
-            model.addRow(new Object[]{usd.getId(), usd.getTitle(), usd.getPriority(), usd.getEstimation(), "Eliminar"});
+            model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation(), "Eliminar"});
         }
     }
 }
