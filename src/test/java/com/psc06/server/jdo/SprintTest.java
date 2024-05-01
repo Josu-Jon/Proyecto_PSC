@@ -1,6 +1,7 @@
 package com.psc06.server.jdo;
 
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +19,7 @@ public class SprintTest {
     private UserStory us;
 
     @Mock
-    private Set<UserStory> us2;
+    private List<UserStory> us2;
 
     @Before
     public void SetUp(){

@@ -1,7 +1,7 @@
 package com.psc06.server.jdo;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.*;
 
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -18,7 +18,7 @@ public class Sprint {
     
     @Persistent(mappedBy="sprint", dependentElement="false")
 	@Join
-    Set<UserStory> stories = new LinkedHashSet<>();
+    List<UserStory> stories = new ArrayList<>();
 
     Sprint (){
     }
@@ -43,7 +43,7 @@ public class Sprint {
         stories.remove(story);
     }
 
-    public Set<UserStory> getAllStories() {
+    public List<UserStory> getAllStories() {
         return this.stories;
     }
 

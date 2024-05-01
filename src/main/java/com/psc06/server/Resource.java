@@ -11,7 +11,9 @@ import javax.jdo.Transaction;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -332,13 +334,60 @@ public class Resource {
 	}
 
 /*
-	@GET
-	@Path("/getUserStoriesFromSprint")
-	public Response getUserStory(SprintData sprint) {
+	@POST
+	@Path("/getAllUserStoriesFromSprint")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserStoriesFromSprint(SprintData sprintId) {
+
+		List<UserStory> userStories = null;
+		Sprint sp  = null;
+
+		try
+        {	
+            tx.begin();
+            logger.info("Checking whether the sprint already exits: '{}'", sprintId);
+
+			try {
+				sp = pm.getObjectById(Sprint.class, sprintId.getSprintNum());
+
+			} catch (JDOObjectNotFoundException jonfe) {
+
+				logger.info("Exception launched: {}", jonfe.getMessage());
+				
+			}
+
+			if (sp != null) {
+
+				userStories = sp.getAllStories();
+
+				if (userStories != null) {
+					logger.info("User Stories retrieved: -> {}", userStories.toString());
+
+					Gson aux = new Gson();
+					String returnedJson = aux.toJson(userStories);
+
+					return Response.ok(returnedJson).build();
+				}
+				return Response.ok("No hay User Stories.").build();
+			} else {
+				logger.info("Sprint no existe");
+			}
+			tx.commit();
+
+			return Response.ok().build();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+			return Response.status(Status.BAD_REQUEST).entity("Los datos implementados no son correctos").build();
+		}
 		
 	}
 
-	*/
+*/
 
 	@GET
 	@Path("/test")

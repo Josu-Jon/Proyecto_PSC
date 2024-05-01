@@ -183,8 +183,30 @@ public class ExampleClient {
 
 		return stories;
 	}
+/*
+	public List<UserStoryData> getUserStoriesFromSprint(int sprintId) {
 
+		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		SprintData sp = new SprintData();
+		sp.setSprintNum(sprintId);
 
+		Response response = invocationBuilder.post(Entity.entity(sp, MediaType.APPLICATION_JSON));
+
+		String listString = response.readEntity(String.class);
+
+		logger.info(listString);
+
+		Gson gson = new Gson();
+		// create the type for the collection. In this case define that the collection is of type Dataset
+		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
+		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
+		
+		return stories;
+	}
+
+*/
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			logger.info("Use: java Client.Client [host] [port]");
@@ -199,6 +221,7 @@ public class ExampleClient {
 		conSer.registerUserStory(id1, userstory1, est1, pb1);
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
 		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
+		//conSer.getUserStoriesFromSprint(sprintId);
 		conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
 
 		conSer.getAllUserStories();
