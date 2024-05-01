@@ -21,6 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.experimental.categories.*;
 
 import com.github.noconnor.junitperf.JUnitPerfRule;
 import com.github.noconnor.junitperf.reporting.providers.HtmlReportGenerator;
@@ -88,6 +89,12 @@ public class ServerIT {
         }
     }
 
+    @Test
+    public void testGetTest() {
+        Response response = target.path("test").request().get();
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+        assertEquals("Test!", response.readEntity(String.class));
+    }
 
     @Test
     public void testRegisterSprint() {
@@ -112,6 +119,33 @@ public class ServerIT {
         Response response = target.path("registerUserStory")
             .request(MediaType.APPLICATION_JSON)
             .post(Entity.entity(story, MediaType.APPLICATION_JSON));
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
+
+    @Test
+    public void testDeleteUserStory() {
+        UserStoryData us = new UserStoryData();
+        us.setId(2);
+        us.setUserStory("Test");
+        us.setEstimation(4);
+        us.setPbPriority(2);
+
+        Response response = target.path("deleteUserStory")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(us, MediaType.APPLICATION_JSON));
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
+
+    @Test
+    public void testDeleteSprint() {
+        SprintData sprint = new SprintData();
+        sprint.setSprintNum(2);
+
+        Response response = target.path("deleteSprint")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(sprint, MediaType.APPLICATION_JSON));
 
         assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
     }
