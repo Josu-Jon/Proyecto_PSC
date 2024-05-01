@@ -1,6 +1,9 @@
 package com.psc06.client;
 
 import java.util.*;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
 
 import javax.jdo.Query;
 import javax.ws.rs.client.Client;
@@ -21,7 +24,8 @@ import com.psc06.server.jdo.UserStory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class ExampleClient {
 
@@ -159,21 +163,28 @@ public class ExampleClient {
 			logger.info("User Story " + id + " correctly deleted from sprint " + sprintId + ". ");
 		}
 	}
-/*
-	public ArrayList<UserStoryData> getAllUserStories() {
+
+	public List<UserStoryData> getAllUserStories() {
 
 		WebTarget registerUserWebTarget = webTarget.path("getAllUserStories");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
-		Response response = invocationBuilder.get(UserStoryData.class);
+		Response response = invocationBuilder.get();
+		String listString= response.readEntity(String.class);
+
+		Gson gson = new Gson();
+		// create the type for the collection. In this case define that the collection is of type Dataset
+		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
+		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
 		
-		JSonPath jsonPathEvaluator = response.jsonPath();
+		for (UserStoryData us : stories) {
+			logger.info(us.toString());
+		}
 
-		ArrayList<UserStory> allStories = jsonPathEvaluator.getList("", UserStoryData.class); 
-
+		return stories;
 	}
 
-*/
+
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			logger.info("Use: java Client.Client [host] [port]");
@@ -182,7 +193,6 @@ public class ExampleClient {
 
 		String hostname = args[0];
 		String port = args[1];
-		ArrayList<UserStoryData> us = new ArrayList<UserStoryData>();
 
 		ExampleClient conSer = new ExampleClient(hostname, port);
 		conSer.registerSprint(sprintId);
@@ -191,7 +201,7 @@ public class ExampleClient {
 		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
 		conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
 
-		//us = conSer.getAllUserStories();
+		conSer.getAllUserStories();
 		
 	}
 }

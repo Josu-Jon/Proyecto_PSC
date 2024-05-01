@@ -26,6 +26,8 @@ import com.psc06.pojo.UserStoryData;
 import com.psc06.server.jdo.Sprint;
 import com.psc06.server.jdo.UserStory;
 
+import com.google.gson.Gson;
+
 @Path("/resource")
 @Produces(MediaType.APPLICATION_JSON)
 public class Resource {
@@ -293,29 +295,27 @@ public class Resource {
 
 	}
 
-/* 
+
 	@GET
 	@Path("/getAllUserStories")
 	public Response getAllUserStories() {
 
-		ArrayList<UserStory> returnedList =null, userStories = null;
+		List<UserStory> userStories = null;
 
 		try {
 			tx.begin();
 			logger.info("Creating query ...");
 
-			try (Query<?> q = pm.newQuery(UserStory.class)) {
+			try (Query<UserStory> q = pm.newQuery(UserStory.class)) {
 				
-				userStories = (ArrayList<UserStory>) q.execute();
-				logger.info("User Stories retrieved.");
+				userStories = q.executeList();
+				
+				logger.info("User Stories retrieved: -> {}", userStories.toString());
+				
+				Gson aux = new Gson();
+				String returnedJson = aux.toJson(userStories);
 
-				returnedList = new ArrayList<UserStory>();
-				
-				for (UserStory us: userStories){
-					returnedList.add(pm.detachCopy(us));
-				}
-				
-				return returnedList;
+				return Response.ok(returnedJson).build();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -328,10 +328,10 @@ public class Resource {
 			}
 		}
 
-		return returnedList;
+		return Response.status(Status.EXPECTATION_FAILED).entity(null).build();
 	}
 
-
+/*
 	@GET
 	@Path("/getUserStoriesFromSprint")
 	public Response getUserStory(SprintData sprint) {

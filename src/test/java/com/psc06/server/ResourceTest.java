@@ -31,6 +31,14 @@ import com.psc06.pojo.SprintData;
 import com.psc06.pojo.UserStoryData;
 import com.psc06.pojo.SprintStoryData;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.*;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+
 public class ResourceTest {
     
     private Resource resource;
@@ -244,37 +252,42 @@ public class ResourceTest {
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
-/*
+
     @Test
     public void testGetAllUserStory(){
 
         // Preparamos el persistence manager para devolver el mock
+        List<UserStory> us2 = new ArrayList<UserStory>();
+
         UserStoryData userStoryData = new UserStoryData();
         userStoryData.setEstimation(3);
         userStoryData.setPbPriority(2);
         userStoryData.setUserStory("Test");
         userStoryData.setId(1);
 
-        // Simulamos que el objeto no esta en la BBDD
-        when(persistenceManager.getObjectById(UserStory.class)).thenThrow(new JDOObjectNotFoundException());
-        
-        // Preparamos el mock
-        when(transaction.isActive()).thenReturn(true);
+        @SuppressWarnings("unchecked")
+        Query<UserStory> query = mock(Query.class);
+        when(persistenceManager.newQuery(UserStory.class)).thenReturn(query);
+
+        UserStory user = new UserStory(1, "Test", 3, 2);
+        us2.add(user);
+        resource.registerUserStory(userStoryData);
+
+        when(query.executeList()).thenReturn(us2);
 
         //Llamamos al metodo a testear
-        Response response = resource.registerUserStory(userStoryData);
+        Response response = resource.getAllUserStories();
 
         // Comprobamos que se ha guardado correctamente
-        ArgumentCaptor<UserStory> usCaptor = ArgumentCaptor.forClass(UserStory.class);
-        verify(persistenceManager).makePersistent(usCaptor.capture());
-        assertEquals(1, usCaptor.getValue().getId());
-        assertEquals("Test", usCaptor.getValue().getUserStory());
-        assertEquals(3, usCaptor.getValue().getEstimation());
-        assertEquals(2, usCaptor.getValue().getPbPriority());
+        String listString = response.getEntity().toString();
 
+		Gson gson = new Gson();
+        Type userStoryListType = new TypeToken<Collection<UserStory>>() {}.getType();
+		List<UserStory> stories = gson.fromJson(listString, userStoryListType);
+		// create the type for the collection. In this case define that the collection is of type Dataset
+        assertEquals(stories.toString(), us2.toString());
 
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
-*/
 }
