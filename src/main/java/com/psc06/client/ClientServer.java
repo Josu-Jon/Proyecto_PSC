@@ -126,6 +126,11 @@ public class ClientServer {
 		}
 	}
 
+	public void modifyUserStory(int id, String userStory, int estimation, int pbPriority){
+		deleteUserStory(id);
+		registerUserStory(id, userStory, estimation, pbPriority);
+	}
+
 	public void reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -168,6 +173,7 @@ public class ClientServer {
 
 		return stories;
 	}
+	
 /*
 	public List<UserStoryData> getUserStoriesFromSprint(int sprintId) {
 
