@@ -5,12 +5,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
-import com.psc06.server.jdo.UserStory;
 import com.psc06.pojo.UserStoryData;
 
-public class Interface extends JFrame {
+public class Interface extends JPanel {
     private JTable usTable;
     private JButton createButton;
     private JButton deleteButton;
@@ -20,13 +18,7 @@ public class Interface extends JFrame {
     private ClientServer clientServer;
 
     public Interface(ClientServer clientServerAux) {
-
         clientServer = clientServerAux;
-        setTitle("Product Backlog");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
-        setLayout(new BorderLayout());
-
         userStories = clientServer.getAllUserStories();
 
         DefaultTableModel model = new DefaultTableModel();
@@ -84,7 +76,6 @@ public class Interface extends JFrame {
                 int estimation = selectedStory.getEstimation();
                 int pbPriority = selectedStory.getPbPriority();
                 clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
-                
             }
         });
 
@@ -94,10 +85,39 @@ public class Interface extends JFrame {
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        userStories = clientServer.getAllUserStories();
         updateUserStoriesTable();
+        // Panel para Sprints
+        JPanel sprintPanel = new JPanel(new BorderLayout());
+        sprintTable = new JTable();
+        JScrollPane sprintScrollPane = new JScrollPane(sprintTable);
+        sprintPanel.add(sprintScrollPane, BorderLayout.CENTER);
 
-        setVisible(true);
+        createSprintButton = new JButton("Crear Sprint");
+        createSprintButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createSprintDialog();
+            }
+        });
+        deleteSprintButton = new JButton("Eliminar Sprint");
+        deleteSprintButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = sprintTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int sprintNum = sprints.get(selectedRow).getSprintNum();
+                    clientServer.deleteSprint(sprintNum);
+                    ((DefaultTableModel) sprintTable.getModel()).removeRow(selectedRow);
+                } else {
+                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Sprint para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+        JPanel sprintButtonPanel = new JPanel(new FlowLayout());
+        sprintButtonPanel.add(createSprintButton);
+        sprintButtonPanel.add(deleteSprintButton);
+        sprintPanel.add(sprintButtonPanel, BorderLayout.SOUTH);
     }
 
     private void createUserStoryDialog() {
@@ -122,10 +142,10 @@ public class Interface extends JFrame {
                 int estimation = Integer.parseInt(estimationField.getText());
 
                 UserStoryData newStory = new UserStoryData();
-		        newStory.setId(1);
-		        newStory.setUserStory(title);
-		        newStory.setEstimation(estimation);
-		        newStory.setPbPriority(priority);
+                newStory.setId(1);
+                newStory.setUserStory(title);
+                newStory.setEstimation(estimation);
+                newStory.setPbPriority(priority);
 
                 userStories.add(newStory);
                 updateUserStoriesTable();
@@ -161,4 +181,3 @@ public class Interface extends JFrame {
         }
     }
 }
-
