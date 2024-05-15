@@ -9,18 +9,28 @@ import java.util.List;
 import com.psc06.pojo.UserStoryData;
 
 public class Interface extends JPanel {
+   private JTabbedPane tabbedPane;
     private JTable usTable;
-    private JButton createButton;
-    private JButton deleteButton;
-    private JButton editButton;
+    private JTable sprintTable;
+    private JButton createUserStoryButton;
+    private JButton deleteUserStoryButton;
+    private JButton createSprintButton;
+    private JButton deleteSprintButton;
+     private JButton editUserStoryButton;
+
     private List<UserStoryData> userStories;
+    //private List<SprintData> sprints;
 
     private ClientServer clientServer;
+
 
     public Interface(ClientServer clientServerAux) {
         clientServer = clientServerAux;
         userStories = clientServer.getAllUserStories();
+        tabbedPane = new JTabbedPane();
 
+        // Panel para User Stories
+        JPanel userStoryPanel = new JPanel(new BorderLayout());
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID");
         model.addColumn("Título");
@@ -37,16 +47,16 @@ public class Interface extends JPanel {
         JScrollPane scrollPane = new JScrollPane(usTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        createButton = new JButton("Crear User Story");
-        createButton.addActionListener(new ActionListener() {
+        createUserStoryButton = new JButton("Crear User Story");
+        createUserStoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createUserStoryDialog();
             }
         });
 
-        deleteButton = new JButton("Eliminar User Story");
-        deleteButton.addActionListener(new ActionListener() {
+        deleteUserStoryButton = new JButton("Eliminar User Story");
+        deleteUserStoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = usTable.getSelectedRow();
@@ -60,8 +70,8 @@ public class Interface extends JPanel {
             }
         });
 
-        editButton = new JButton("Editar User Story");
-        editButton.addActionListener(new ActionListener() {
+        editUserStoryButton = new JButton("Editar User Story");
+        editUserStoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = usTable.getSelectedRow();
@@ -79,13 +89,15 @@ public class Interface extends JPanel {
             }
         });
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(editButton);
-        buttonPanel.add(createButton);
-        buttonPanel.add(deleteButton);
-        add(buttonPanel, BorderLayout.SOUTH);
 
-        updateUserStoriesTable();
+        JPanel userStoryButtonPanel = new JPanel(new FlowLayout());
+        userStoryButtonPanel.add(createUserStoryButton);
+        userStoryButtonPanel.add(deleteUserStoryButton);
+        userStoryPanel.add(userStoryButtonPanel, BorderLayout.SOUTH);
+
+        tabbedPane.addTab("User Stories", userStoryPanel);
+
+
         // Panel para Sprints
         JPanel sprintPanel = new JPanel(new BorderLayout());
         sprintTable = new JTable();
@@ -105,8 +117,8 @@ public class Interface extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = sprintTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    int sprintNum = sprints.get(selectedRow).getSprintNum();
-                    clientServer.deleteSprint(sprintNum);
+                    //int sprintNum = sprints.get(selectedRow).getSprintNum();
+                    //clientServer.deleteSprint(sprintNum);
                     ((DefaultTableModel) sprintTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Sprint para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
@@ -118,6 +130,14 @@ public class Interface extends JPanel {
         sprintButtonPanel.add(createSprintButton);
         sprintButtonPanel.add(deleteSprintButton);
         sprintPanel.add(sprintButtonPanel, BorderLayout.SOUTH);
+
+        tabbedPane.addTab("Sprints", sprintPanel);
+
+        setLayout(new BorderLayout());
+        add(tabbedPane, BorderLayout.CENTER);
+
+        updateUserStoriesTable();
+        //updateSprintTable();
     }
 
     private void createUserStoryDialog() {
@@ -179,5 +199,12 @@ public class Interface extends JPanel {
         for (UserStoryData usd : userStories) {
             model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation(), "Eliminar"});
         }
+    }
+    
+    private void createSprintDialog() {
+
+    }
+    private void updateSprintTable() {
+
     }
 }
