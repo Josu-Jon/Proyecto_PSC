@@ -5,8 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import com.psc06.pojo.UserStoryData;
 
 public class Interface extends JPanel {
@@ -19,22 +19,38 @@ public class Interface extends JPanel {
     private JButton deleteSprintButton;
     private JButton editUserStoryButton;
 
-    private List<UserStoryData> userStories;
+    private List<UserStoryData> userStories = new ArrayList<>();
     //private List<SprintData> sprints;
 
-    //private ClientServer clientServer;
+    private ClientServer clientServer;
+
 
     public Interface(ClientServer clientServerAux) {
-        // clientServer = clientServerAux;
-        // userStories = clientServer.getAllUserStories();
-        
-        // Datos de prueba
-        userStories = new ArrayList<>();
-        userStories.add(new UserStoryData(1, "Crear cliente y servidor", 5, 2));
-        userStories.add(new UserStoryData(2, "Crear pom", 2, 7));
-
+        clientServer = clientServerAux;
+        //userStories = clientServer.getAllUserStories();
         tabbedPane = new JTabbedPane();
+           // Datos de prueba
+        UserStoryData usd1 = new UserStoryData();
+        usd1.setId(1);
+        usd1.setUserStory("Crear cliente y servidor");
+        usd1.setEstimation(5);
+        usd1.setPbPriority(2);
 
+        UserStoryData usd2 = new UserStoryData();
+        usd2.setId(2);
+        usd2.setUserStory("Crear pom");
+        usd2.setEstimation(2);
+        usd2.setPbPriority(7);
+
+        UserStoryData usd3 = new UserStoryData();
+        usd3.setId(3);
+        usd3.setUserStory("Diseñar interfaz de usuario");
+        usd3.setEstimation(3);
+        usd3.setPbPriority(5);
+
+        userStories.add(usd1);
+        userStories.add(usd2);
+        userStories.add(usd3); 
         // Panel para User Stories
         JPanel userStoryPanel = new JPanel(new BorderLayout());
         DefaultTableModel model = new DefaultTableModel();
@@ -51,7 +67,7 @@ public class Interface extends JPanel {
             }
         };
         JScrollPane scrollPane = new JScrollPane(usTable);
-        userStoryPanel.add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
 
         createUserStoryButton = new JButton("Crear User Story");
         createUserStoryButton.addActionListener(new ActionListener() {
@@ -68,9 +84,8 @@ public class Interface extends JPanel {
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int id = userStories.get(selectedRow).getId();
-                    // clientServer.deleteUserStory(id);
+                    //clientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
-                    userStories.remove(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
                 }
@@ -86,28 +101,24 @@ public class Interface extends JPanel {
                     JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+                
                 UserStoryData selectedStory = userStories.get(selectedRow);
                 int id = selectedStory.getId();
                 String userStory = selectedStory.getUserStory();
                 int estimation = selectedStory.getEstimation();
                 int pbPriority = selectedStory.getPbPriority();
-                // clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
-                // Actualizar datos de prueba
-                selectedStory.setUserStory(userStory);
-                selectedStory.setEstimation(estimation);
-                selectedStory.setPbPriority(pbPriority);
-                updateUserStoriesTable();
+                //clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
             }
         });
+
 
         JPanel userStoryButtonPanel = new JPanel(new FlowLayout());
         userStoryButtonPanel.add(createUserStoryButton);
         userStoryButtonPanel.add(deleteUserStoryButton);
-        userStoryButtonPanel.add(editUserStoryButton);
         userStoryPanel.add(userStoryButtonPanel, BorderLayout.SOUTH);
 
         tabbedPane.addTab("User Stories", userStoryPanel);
+
 
         // Panel para Sprints
         JPanel sprintPanel = new JPanel(new BorderLayout());
@@ -148,7 +159,7 @@ public class Interface extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
 
         updateUserStoriesTable();
-        // updateSprintTable();
+        //updateSprintTable();
     }
 
     private void createUserStoryDialog() {
@@ -173,14 +184,14 @@ public class Interface extends JPanel {
                 int estimation = Integer.parseInt(estimationField.getText());
 
                 UserStoryData newStory = new UserStoryData();
-                newStory.setId(userStories.size() + 1); // Incrementar el ID para el nuevo dato de prueba
+                newStory.setId(1);
                 newStory.setUserStory(title);
                 newStory.setEstimation(estimation);
                 newStory.setPbPriority(priority);
 
                 userStories.add(newStory);
                 updateUserStoriesTable();
-                // clientServer.registerUserStory(newStory.getId(), title, estimation, priority);
+                clientServer.registerUserStory(1, title, estimation, priority);
                 dialog.dispose();
             }
         });
@@ -211,12 +222,23 @@ public class Interface extends JPanel {
             model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation(), "Eliminar"});
         }
     }
-
+    
     private void createSprintDialog() {
 
     }
-
     private void updateSprintTable() {
 
     }
+    public void mostrarVentana() {
+    SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+            JFrame frame = new JFrame("Gestor de Proyectos");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            frame.add(Interface.this); // Agrega la instancia actual de Interface al frame
+            frame.setVisible(true);
+        }
+    });
+}
 }
