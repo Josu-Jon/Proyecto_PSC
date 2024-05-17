@@ -67,7 +67,7 @@ public class Interface extends JPanel {
             }
         };
         JScrollPane scrollPane = new JScrollPane(usTable);
-        add(scrollPane, BorderLayout.CENTER);
+        userStoryPanel.add(scrollPane, BorderLayout.CENTER);
 
         createUserStoryButton = new JButton("Crear User Story");
         createUserStoryButton.addActionListener(new ActionListener() {
