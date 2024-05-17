@@ -42,7 +42,7 @@ public class MainClient {
 		//conSer.getUserStoriesFromSprint(sprintId);
 		conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
 
-		conSer.getAllUserStories();
+		//conSer.getAllUserStories();
 		
 		new Interface(conSer);
 	}
