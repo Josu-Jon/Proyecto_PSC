@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 import com.psc06.pojo.UserStoryData;
+import com.psc06.pojo.SprintData;
 
 public class Interface extends JPanel {
     private JTabbedPane tabbedPane;
@@ -20,7 +21,7 @@ public class Interface extends JPanel {
     private JButton editUserStoryButton;
 
     private List<UserStoryData> userStories = new ArrayList<>();
-    //private List<SprintData> sprints;
+    private List<SprintData> sprints = new ArrayList<>();
 
     private ClientServer clientServer;
 
@@ -122,9 +123,35 @@ public class Interface extends JPanel {
 
         // Panel para Sprints
         JPanel sprintPanel = new JPanel(new BorderLayout());
-        sprintTable = new JTable();
-        JScrollPane sprintScrollPane = new JScrollPane(sprintTable);
-        sprintPanel.add(sprintScrollPane, BorderLayout.CENTER);
+        // Datos de prueba
+        SprintData sprint1 = new SprintData();
+        sprint1.setSprintNum(1);
+        //sprint1.setStartDate("2023-03-01");
+        //sprint1.setEndDate("2023-03-15");
+
+        SprintData sprint2 = new SprintData();
+        sprint2.setSprintNum(2);
+        //sprint2.setStartDate("2023-03-16");
+        //sprint2.setEndDate("2023-03-30");
+
+        sprints.add(sprint1);
+        sprints.add(sprint2);
+        DefaultTableModel sprintModel = new DefaultTableModel();
+        sprintModel.addColumn("Número de Sprint");
+        sprintModel.addColumn("Historias");
+        //sprintModel.addColumn("Fecha de Inicio");
+        //sprintModel.addColumn("Fecha de Fin");
+        sprintModel.addColumn("Eliminar");
+
+        sprintTable = new JTable(sprintModel) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+
+    
 
         createSprintButton = new JButton("Crear Sprint");
         createSprintButton.addActionListener(new ActionListener() {
@@ -152,6 +179,8 @@ public class Interface extends JPanel {
         sprintButtonPanel.add(createSprintButton);
         sprintButtonPanel.add(deleteSprintButton);
         sprintPanel.add(sprintButtonPanel, BorderLayout.SOUTH);
+        JScrollPane sprintScrollPane = new JScrollPane(sprintTable);
+        sprintPanel.add(sprintScrollPane, BorderLayout.CENTER);
 
         tabbedPane.addTab("Sprints", sprintPanel);
 
@@ -159,7 +188,7 @@ public class Interface extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
 
         updateUserStoriesTable();
-        //updateSprintTable();
+        updateSprintTable();
     }
 
     private void createUserStoryDialog() {
@@ -224,10 +253,69 @@ public class Interface extends JPanel {
     }
     
     private void createSprintDialog() {
+        JFrame dialog = new JFrame("Crear Nuevo Sprint");
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.setSize(400, 300);
+        dialog.setLayout(new GridLayout(5, 2));
 
-    }
+        JLabel sprintNumLabel = new JLabel("Número de Sprint:");
+        JTextField sprintNumField = new JTextField();
+
+        JLabel storiesLabel = new JLabel("Historias de Usuario:");
+        JTextArea storiesArea = new JTextArea();
+        storiesArea.setEditable(false);
+
+        StringBuilder storiesBuilder = new StringBuilder();
+        for (UserStoryData usd : userStories) {
+            storiesBuilder.append(usd.getUserStory()).append("\n");
+        }
+        storiesArea.setText(storiesBuilder.toString());
+
+        JLabel startDateLabel = new JLabel("Fecha de Inicio:");
+        JTextField startDateField = new JTextField();
+
+        JLabel endDateLabel = new JLabel("Fecha de Fin:");
+        JTextField endDateField = new JTextField();
+
+        JButton createButton = new JButton("Crear");
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            int sprintNum = Integer.parseInt(sprintNumField.getText());
+            String startDate = startDateField.getText();
+            String endDate = endDateField.getText();
+            // clientServer.createSprint(sprintNum);
+            dialog.dispose();
+            }
+        });
+
+        JButton cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+
+        dialog.add(sprintNumLabel);
+        dialog.add(sprintNumField);
+        dialog.add(storiesLabel);
+        dialog.add(new JScrollPane(storiesArea)); 
+        dialog.add(startDateLabel);
+        dialog.add(startDateField);
+        dialog.add(endDateLabel);
+        dialog.add(endDateField);
+        dialog.add(cancelButton);
+        dialog.add(createButton);
+
+        dialog.setVisible(true);
+        }
     private void updateSprintTable() {
-
+        DefaultTableModel model = (DefaultTableModel) sprintTable.getModel();
+        model.setRowCount(0);
+        for (SprintData sprint : sprints) {
+            model.addRow(new Object[]{sprint.getSprintNum()});
+        }
     }
     public void mostrarVentana() {
     SwingUtilities.invokeLater(new Runnable() {
