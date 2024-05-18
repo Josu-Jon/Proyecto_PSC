@@ -59,8 +59,7 @@ public class Interface extends JPanel {
         model.addColumn("Título");
         model.addColumn("Prioridad");
         model.addColumn("Estimación");
-        model.addColumn("Eliminar");
-
+        
         usTable = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -85,7 +84,7 @@ public class Interface extends JPanel {
                 int selectedRow = usTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int id = userStories.get(selectedRow).getId();
-                    //clientServer.deleteUserStory(id);
+                    clientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
@@ -108,7 +107,7 @@ public class Interface extends JPanel {
                 String userStory = selectedStory.getUserStory();
                 int estimation = selectedStory.getEstimation();
                 int pbPriority = selectedStory.getPbPriority();
-                //clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
+                clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
             }
         });
 
@@ -139,9 +138,8 @@ public class Interface extends JPanel {
         DefaultTableModel sprintModel = new DefaultTableModel();
         sprintModel.addColumn("Número de Sprint");
         sprintModel.addColumn("Historias");
-        //sprintModel.addColumn("Fecha de Inicio");
-        //sprintModel.addColumn("Fecha de Fin");
-        sprintModel.addColumn("Eliminar");
+        sprintModel.addColumn("Fecha de Inicio");
+        sprintModel.addColumn("Fecha de Fin");
 
         sprintTable = new JTable(sprintModel) {
             @Override
@@ -166,8 +164,8 @@ public class Interface extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = sprintTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    //int sprintNum = sprints.get(selectedRow).getSprintNum();
-                    //clientServer.deleteSprint(sprintNum);
+                    int sprintNum = sprints.get(selectedRow).getSprintNum();
+                    clientServer.deleteSprint(sprintNum);
                     ((DefaultTableModel) sprintTable.getModel()).removeRow(selectedRow);
                 } else {
                     JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Sprint para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
@@ -209,8 +207,15 @@ public class Interface extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String title = titleField.getText();
-                int priority = Integer.parseInt(priorityField.getText());
-                int estimation = Integer.parseInt(estimationField.getText());
+                int priority, estimation;
+                
+                try {
+                    priority = Integer.parseInt(priorityField.getText());
+                    estimation = Integer.parseInt(estimationField.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 UserStoryData newStory = new UserStoryData();
                 newStory.setId(1);
@@ -224,6 +229,7 @@ public class Interface extends JPanel {
                 dialog.dispose();
             }
         });
+        
         JButton cancelButton = new JButton("Cancelar");
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -248,7 +254,7 @@ public class Interface extends JPanel {
         DefaultTableModel model = (DefaultTableModel) usTable.getModel();
         model.setRowCount(0);
         for (UserStoryData usd : userStories) {
-            model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation(), "Eliminar"});
+            model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation()});
         }
     }
     
@@ -262,14 +268,10 @@ public class Interface extends JPanel {
         JTextField sprintNumField = new JTextField();
 
         JLabel storiesLabel = new JLabel("Historias de Usuario:");
-        JTextArea storiesArea = new JTextArea();
-        storiesArea.setEditable(false);
-
-        StringBuilder storiesBuilder = new StringBuilder();
+        JComboBox<String> storiesComboBox = new JComboBox<>();
         for (UserStoryData usd : userStories) {
-            storiesBuilder.append(usd.getUserStory()).append("\n");
+            storiesComboBox.addItem(usd.getUserStory());
         }
-        storiesArea.setText(storiesBuilder.toString());
 
         JLabel startDateLabel = new JLabel("Fecha de Inicio:");
         JTextField startDateField = new JTextField();
@@ -281,11 +283,18 @@ public class Interface extends JPanel {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            int sprintNum = Integer.parseInt(sprintNumField.getText());
-            String startDate = startDateField.getText();
-            String endDate = endDateField.getText();
-            // clientServer.createSprint(sprintNum);
-            dialog.dispose();
+                try {
+                    int sprintNum = Integer.parseInt(sprintNumField.getText());
+                    String selectedStory = (String) storiesComboBox.getSelectedItem();
+                    String startDate = startDateField.getText();
+                    String endDate = endDateField.getText();
+
+                    // clientServer.createSprint(sprintNum, selectedStory, startDate, endDate);
+
+                    dialog.dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -300,7 +309,7 @@ public class Interface extends JPanel {
         dialog.add(sprintNumLabel);
         dialog.add(sprintNumField);
         dialog.add(storiesLabel);
-        dialog.add(new JScrollPane(storiesArea)); 
+        dialog.add(storiesComboBox);
         dialog.add(startDateLabel);
         dialog.add(startDateField);
         dialog.add(endDateLabel);
@@ -309,7 +318,7 @@ public class Interface extends JPanel {
         dialog.add(createButton);
 
         dialog.setVisible(true);
-        }
+    }
     private void updateSprintTable() {
         DefaultTableModel model = (DefaultTableModel) sprintTable.getModel();
         model.setRowCount(0);
@@ -324,7 +333,7 @@ public class Interface extends JPanel {
             JFrame frame = new JFrame("Gestor de Proyectos");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
-            frame.add(Interface.this); // Agrega la instancia actual de Interface al frame
+            frame.add(Interface.this); 
             frame.setVisible(true);
         }
     });
