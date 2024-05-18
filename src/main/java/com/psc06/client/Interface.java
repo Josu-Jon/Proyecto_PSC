@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.ArrayList;
 import com.psc06.pojo.UserStoryData;
 import com.psc06.pojo.SprintData;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Interface extends JPanel {
     private JTabbedPane tabbedPane;
@@ -59,7 +62,7 @@ public class Interface extends JPanel {
         model.addColumn("Título");
         model.addColumn("Prioridad");
         model.addColumn("Estimación");
-        
+
         usTable = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -125,19 +128,19 @@ public class Interface extends JPanel {
         // Datos de prueba
         SprintData sprint1 = new SprintData();
         sprint1.setSprintNum(1);
-        //sprint1.setStartDate("2023-03-01");
-        //sprint1.setEndDate("2023-03-15");
+        sprint1.setStartDate("2023-03-01");
+        sprint1.setEndDate("2023-03-15");
 
         SprintData sprint2 = new SprintData();
         sprint2.setSprintNum(2);
-        //sprint2.setStartDate("2023-03-16");
-        //sprint2.setEndDate("2023-03-30");
+        sprint2.setStartDate("2023-03-16");
+        sprint2.setEndDate("2023-03-30");
 
         sprints.add(sprint1);
         sprints.add(sprint2);
         DefaultTableModel sprintModel = new DefaultTableModel();
         sprintModel.addColumn("Número de Sprint");
-        sprintModel.addColumn("Historias");
+        //sprintModel.addColumn("Historias");
         sprintModel.addColumn("Fecha de Inicio");
         sprintModel.addColumn("Fecha de Fin");
 
@@ -147,9 +150,6 @@ public class Interface extends JPanel {
                 return false;
             }
         };
-
-
-    
 
         createSprintButton = new JButton("Crear Sprint");
         createSprintButton.addActionListener(new ActionListener() {
@@ -285,12 +285,24 @@ public class Interface extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int sprintNum = Integer.parseInt(sprintNumField.getText());
-                    String selectedStory = (String) storiesComboBox.getSelectedItem();
                     String startDate = startDateField.getText();
                     String endDate = endDateField.getText();
-
-                    // clientServer.createSprint(sprintNum, selectedStory, startDate, endDate);
-
+                    if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+                        JOptionPane.showMessageDialog(dialog, "El formato de fecha debe ser yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (!isEndDateAfterStartDate(startDate, endDate)) {
+                        JOptionPane.showMessageDialog(dialog, "La fecha de fin debe ser posterior a la fecha de inicio", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    SprintData newSprint = new SprintData();
+                    newSprint.setSprintNum(sprintNum);
+                    newSprint.setStartDate(startDate);
+                    newSprint.setEndDate(endDate);
+    
+                    sprints.add(newSprint);
+                    updateSprintTable();
+                    //clientServer.registerSprint(sprintNum, startDate, endDate);
                     dialog.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -323,7 +335,7 @@ public class Interface extends JPanel {
         DefaultTableModel model = (DefaultTableModel) sprintTable.getModel();
         model.setRowCount(0);
         for (SprintData sprint : sprints) {
-            model.addRow(new Object[]{sprint.getSprintNum()});
+            model.addRow(new Object[]{sprint.getSprintNum(), sprint.getStartDate(), sprint.getEndDate()});
         }
     }
     public void mostrarVentana() {
@@ -337,5 +349,27 @@ public class Interface extends JPanel {
             frame.setVisible(true);
         }
     });
+}
+private boolean isEndDateAfterStartDate(String startDateText, String endDateText) {
+    try {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = sdf.parse(startDateText);
+        Date endDate = sdf.parse(endDateText);
+        
+        return endDate.compareTo(startDate) > 0;
+    } catch (ParseException e) {
+        e.printStackTrace();
+        return false; 
+    }
+}
+private boolean isValidDateFormat(String dateString) {
+    try {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); 
+        sdf.parse(dateString);
+        return true; 
+    } catch (ParseException e) {
+        return false;
+    }
 }
 }
