@@ -28,12 +28,11 @@ public class Interface extends JPanel {
 
     private ClientServer clientServer;
 
-
     public Interface(ClientServer clientServerAux) {
         clientServer = clientServerAux;
-        //userStories = clientServer.getAllUserStories();
         tabbedPane = new JTabbedPane();
-           // Datos de prueba
+        
+        // Datos de prueba
         UserStoryData usd1 = new UserStoryData();
         usd1.setId(1);
         usd1.setUserStory("Crear cliente y servidor");
@@ -54,7 +53,8 @@ public class Interface extends JPanel {
 
         userStories.add(usd1);
         userStories.add(usd2);
-        userStories.add(usd3); 
+        userStories.add(usd3);
+
         // Panel para User Stories
         JPanel userStoryPanel = new JPanel(new BorderLayout());
         DefaultTableModel model = new DefaultTableModel();
@@ -66,7 +66,7 @@ public class Interface extends JPanel {
         usTable = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
         JScrollPane scrollPane = new JScrollPane(usTable);
@@ -114,7 +114,6 @@ public class Interface extends JPanel {
             }
         });
 
-
         JPanel userStoryButtonPanel = new JPanel(new FlowLayout());
         userStoryButtonPanel.add(createUserStoryButton);
         userStoryButtonPanel.add(deleteUserStoryButton);
@@ -122,27 +121,31 @@ public class Interface extends JPanel {
 
         tabbedPane.addTab("User Stories", userStoryPanel);
 
-
         // Panel para Sprints
         JPanel sprintPanel = new JPanel(new BorderLayout());
+
         // Datos de prueba
         SprintData sprint1 = new SprintData();
         sprint1.setSprintNum(1);
         sprint1.setStartDate("2023-03-01");
         sprint1.setEndDate("2023-03-15");
+        sprint1.addUserStory(usd1);
+        sprint1.addUserStory(usd2);
 
         SprintData sprint2 = new SprintData();
         sprint2.setSprintNum(2);
         sprint2.setStartDate("2023-03-16");
         sprint2.setEndDate("2023-03-30");
+        sprint2.addUserStory(usd3);
 
         sprints.add(sprint1);
         sprints.add(sprint2);
+
         DefaultTableModel sprintModel = new DefaultTableModel();
         sprintModel.addColumn("Número de Sprint");
-        //sprintModel.addColumn("Historias");
         sprintModel.addColumn("Fecha de Inicio");
         sprintModel.addColumn("Fecha de Fin");
+        sprintModel.addColumn("User Stories");
 
         sprintTable = new JTable(sprintModel) {
             @Override
@@ -158,6 +161,7 @@ public class Interface extends JPanel {
                 createSprintDialog();
             }
         });
+
         deleteSprintButton = new JButton("Eliminar Sprint");
         deleteSprintButton.addActionListener(new ActionListener() {
             @Override
@@ -257,7 +261,7 @@ public class Interface extends JPanel {
             model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation()});
         }
     }
-    
+
     private void createSprintDialog() {
         JFrame dialog = new JFrame("Crear Nuevo Sprint");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -268,10 +272,9 @@ public class Interface extends JPanel {
         JTextField sprintNumField = new JTextField();
 
         JLabel storiesLabel = new JLabel("Historias de Usuario:");
-        JComboBox<String> storiesComboBox = new JComboBox<>();
-        for (UserStoryData usd : userStories) {
-            storiesComboBox.addItem(usd.getUserStory());
-        }
+        JList<String> storiesList = new JList<>(userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+        storiesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JScrollPane storiesScrollPane = new JScrollPane(storiesList);
 
         JLabel startDateLabel = new JLabel("Fecha de Inicio:");
         JTextField startDateField = new JTextField();
@@ -299,7 +302,16 @@ public class Interface extends JPanel {
                     newSprint.setSprintNum(sprintNum);
                     newSprint.setStartDate(startDate);
                     newSprint.setEndDate(endDate);
-    
+                    
+                    for (String selectedStoryTitle : storiesList.getSelectedValuesList()) {
+                        for (UserStoryData usd : userStories) {
+                            if (usd.getUserStory().equals(selectedStoryTitle)) {
+                                newSprint.addUserStory(usd);
+                                break;
+                            }
+                        }
+                    }
+
                     sprints.add(newSprint);
                     updateSprintTable();
                     //clientServer.registerSprint(sprintNum, startDate, endDate);
@@ -321,7 +333,7 @@ public class Interface extends JPanel {
         dialog.add(sprintNumLabel);
         dialog.add(sprintNumField);
         dialog.add(storiesLabel);
-        dialog.add(storiesComboBox);
+        dialog.add(storiesScrollPane);
         dialog.add(startDateLabel);
         dialog.add(startDateField);
         dialog.add(endDateLabel);
@@ -331,45 +343,50 @@ public class Interface extends JPanel {
 
         dialog.setVisible(true);
     }
+
     private void updateSprintTable() {
         DefaultTableModel model = (DefaultTableModel) sprintTable.getModel();
         model.setRowCount(0);
         for (SprintData sprint : sprints) {
-            model.addRow(new Object[]{sprint.getSprintNum(), sprint.getStartDate(), sprint.getEndDate()});
+            String userStoriesStr = String.join(", ", sprint.getUserStories().stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+            model.addRow(new Object[]{sprint.getSprintNum(), sprint.getStartDate(), sprint.getEndDate(), userStoriesStr});
         }
     }
+
     public void mostrarVentana() {
-    SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-            JFrame frame = new JFrame("Gestor de Proyectos");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
-            frame.add(Interface.this); 
-            frame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Gestor de Proyectos");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setSize(800, 600);
+                frame.add(Interface.this);
+                frame.setVisible(true);
+            }
+        });
+    }
+
+    private boolean isEndDateAfterStartDate(String startDateText, String endDateText) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = sdf.parse(startDateText);
+            Date endDate = sdf.parse(endDateText);
+
+            return endDate.compareTo(startDate) > 0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
         }
-    });
-}
-private boolean isEndDateAfterStartDate(String startDateText, String endDateText) {
-    try {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = sdf.parse(startDateText);
-        Date endDate = sdf.parse(endDateText);
-        
-        return endDate.compareTo(startDate) > 0;
-    } catch (ParseException e) {
-        e.printStackTrace();
-        return false; 
     }
-}
-private boolean isValidDateFormat(String dateString) {
-    try {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false); 
-        sdf.parse(dateString);
-        return true; 
-    } catch (ParseException e) {
-        return false;
+
+    private boolean isValidDateFormat(String dateString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            sdf.parse(dateString);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
-}
 }
