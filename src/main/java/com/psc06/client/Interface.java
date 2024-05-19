@@ -20,6 +20,7 @@ public class Interface extends JPanel {
     private JButton createUserStoryButton;
     private JButton deleteUserStoryButton;
     private JButton createSprintButton;
+    private JButton editSprintButton;
     private JButton deleteSprintButton;
     private JButton editUserStoryButton;
 
@@ -96,27 +97,75 @@ public class Interface extends JPanel {
         });
 
         editUserStoryButton = new JButton("Editar User Story");
-        editUserStoryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = usTable.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                UserStoryData selectedStory = userStories.get(selectedRow);
-                int id = selectedStory.getId();
-                String userStory = selectedStory.getUserStory();
-                int estimation = selectedStory.getEstimation();
-                int pbPriority = selectedStory.getPbPriority();
-                clientServer.modifyUserStory(id, userStory, estimation, pbPriority);
+    editUserStoryButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int selectedRow = usTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        });
 
+            UserStoryData selectedStory = userStories.get(selectedRow);
+
+            JFrame editDialog = new JFrame("Editar User Story");
+            editDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            editDialog.setSize(300, 200);
+            editDialog.setLayout(new GridLayout(4, 2));
+
+            JLabel titleLabel = new JLabel("Título:");
+            JTextField titleField = new JTextField(selectedStory.getUserStory());
+            JLabel priorityLabel = new JLabel("Prioridad:");
+            JTextField priorityField = new JTextField(String.valueOf(selectedStory.getPbPriority()));
+            JLabel estimationLabel = new JLabel("Estimación:");
+            JTextField estimationField = new JTextField(String.valueOf(selectedStory.getEstimation()));
+
+            JButton saveButton = new JButton("Guardar");
+            saveButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        String title = titleField.getText();
+                        int priority = Integer.parseInt(priorityField.getText());
+                        int estimation = Integer.parseInt(estimationField.getText());
+
+                        selectedStory.setUserStory(title);
+                        selectedStory.setPbPriority(priority);
+                        selectedStory.setEstimation(estimation);
+
+                        updateUserStoriesTable();
+                        //clientServer.modifyUserStory(selectedStory.getId(), title, estimation, priority);
+                        editDialog.dispose();
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(editDialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+
+            JButton cancelButton = new JButton("Cancelar");
+            cancelButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    editDialog.dispose();
+                }
+            });
+
+            editDialog.add(titleLabel);
+            editDialog.add(titleField);
+            editDialog.add(priorityLabel);
+            editDialog.add(priorityField);
+            editDialog.add(estimationLabel);
+            editDialog.add(estimationField);
+            editDialog.add(cancelButton);
+            editDialog.add(saveButton);
+
+            editDialog.setVisible(true);
+        }
+    });
         JPanel userStoryButtonPanel = new JPanel(new FlowLayout());
         userStoryButtonPanel.add(createUserStoryButton);
         userStoryButtonPanel.add(deleteUserStoryButton);
+        userStoryButtonPanel.add(editUserStoryButton);
         userStoryPanel.add(userStoryButtonPanel, BorderLayout.SOUTH);
 
         tabbedPane.addTab("User Stories", userStoryPanel);
@@ -176,10 +225,102 @@ public class Interface extends JPanel {
                 }
             }
         });
+        editSprintButton = new JButton("Editar Sprint");
+        editSprintButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = sprintTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un Sprint para editar.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
+                SprintData selectedSprint = sprints.get(selectedRow);
+
+                JFrame editDialog = new JFrame("Editar Sprint");
+                editDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                editDialog.setSize(400, 300);
+                editDialog.setLayout(new GridLayout(5, 2));
+
+                JLabel sprintNumLabel = new JLabel("Número de Sprint:");
+                JTextField sprintNumField = new JTextField(String.valueOf(selectedSprint.getSprintNum()));
+                sprintNumField.setEditable(false);
+
+                JLabel storiesLabel = new JLabel("Historias de Usuario:");
+                JList<String> storiesList = new JList<>(userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+                storiesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                JScrollPane storiesScrollPane = new JScrollPane(storiesList);
+
+                JLabel startDateLabel = new JLabel("Fecha de Inicio:");
+                JTextField startDateField = new JTextField(selectedSprint.getStartDate());
+
+                JLabel endDateLabel = new JLabel("Fecha de Fin:");
+                JTextField endDateField = new JTextField(selectedSprint.getEndDate());
+
+                JButton saveButton = new JButton("Guardar");
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            String startDate = startDateField.getText();
+                            String endDate = endDateField.getText();
+                            if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+                                JOptionPane.showMessageDialog(editDialog, "El formato de fecha debe ser yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            if (!isEndDateAfterStartDate(startDate, endDate)) {
+                                JOptionPane.showMessageDialog(editDialog, "La fecha de fin debe ser posterior a la fecha de inicio", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+
+                            selectedSprint.setStartDate(startDate);
+                            selectedSprint.setEndDate(endDate);
+                            selectedSprint.clearUserStories();
+                            for (String selectedStoryTitle : storiesList.getSelectedValuesList()) {
+                                for (UserStoryData usd : userStories) {
+                                    if (usd.getUserStory().equals(selectedStoryTitle)) {
+                                        selectedSprint.addUserStory(usd);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            updateSprintTable();
+                            //clientServer.modifySprint(selectedSprint.getSprintNum(), startDate, endDate, selectedSprint.getUserStories());
+                            editDialog.dispose();
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(editDialog, "Error al guardar el sprint.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+
+                JButton cancelButton = new JButton("Cancelar");
+                cancelButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        editDialog.dispose();
+                    }
+                });
+
+                editDialog.add(sprintNumLabel);
+                editDialog.add(sprintNumField);
+                editDialog.add(storiesLabel);
+                editDialog.add(storiesScrollPane);
+                editDialog.add(startDateLabel);
+                editDialog.add(startDateField);
+                editDialog.add(endDateLabel);
+                editDialog.add(endDateField);
+                editDialog.add(cancelButton);
+                editDialog.add(saveButton);
+
+                editDialog.setVisible(true);
+            }
+        });
         JPanel sprintButtonPanel = new JPanel(new FlowLayout());
         sprintButtonPanel.add(createSprintButton);
         sprintButtonPanel.add(deleteSprintButton);
+        sprintButtonPanel.add(editSprintButton);
+
         sprintPanel.add(sprintButtonPanel, BorderLayout.SOUTH);
         JScrollPane sprintScrollPane = new JScrollPane(sprintTable);
         sprintPanel.add(sprintScrollPane, BorderLayout.CENTER);

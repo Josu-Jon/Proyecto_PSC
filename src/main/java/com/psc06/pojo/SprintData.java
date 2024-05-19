@@ -50,6 +50,9 @@ public class SprintData {
     public void addUserStory(UserStoryData userStory) {
         this.userStories.add(userStory);
     }
+    public void clearUserStories() {
+        userStories.clear();
+    }
 
     @Override
     public String toString() {
