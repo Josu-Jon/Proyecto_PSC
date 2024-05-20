@@ -30,6 +30,9 @@ import com.psc06.server.jdo.UserStory;
 
 import com.google.gson.Gson;
 
+/**
+ * Main Class for server conection and functions.
+ */
 @Path("/resource")
 @Produces(MediaType.APPLICATION_JSON)
 public class Resource {
@@ -40,12 +43,20 @@ public class Resource {
 	private PersistenceManager pm=null;
 	private Transaction tx=null;
 
+	/**
+	 * Constructor for the Resource class.
+	 */
 	public Resource() {
 		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
 		this.pm = pmf.getPersistenceManager();
 		this.tx = pm.currentTransaction();
 	}
 	
+	/**
+	 * Method to register a new sprint.
+	 * @param sprintData Get a serialized sprint 
+	 * @return Response with the status of the operation.
+	 */
 	@POST
 	@Path("/registerSprint")
 	public Response registerSprint(SprintData sprintData) {
@@ -81,6 +92,11 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Method to delete a sprint.
+	 * @param sprintData Get a serialized sprint
+	 * @return Status of the operation.
+	 */
 	@POST
 	@Path("/deleteSprint")
 	public Response deleteSprint(SprintData sprintData) {
@@ -114,6 +130,11 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Method to register a new user story.
+	 * @param userStoryData Get a serialized user story
+	 * @return Status of the operation.
+	 */
 	@POST
 	@Path("/registerUserStory")
 	public Response registerUserStory(UserStoryData userStoryData) {
@@ -157,6 +178,11 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Method to delete a user story.
+	 * @param userStoryData Get a serialized user story
+	 * @return Status of the operation.
+	 */
 	@POST
 	@Path("/deleteUserStory")
 	public Response deleteUserStory(UserStoryData userStoryData) {
@@ -190,6 +216,11 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Method to assign a user story to a sprint.
+	 * @param sprintStoryData Get a serialized sprint and user story
+	 * @return Status of the operation.
+	 */
 	@POST
 	@Path("/assignUserStory")
 	public Response assignUserStory(SprintStoryData sprintStoryData) {
@@ -249,6 +280,11 @@ public class Resource {
 		}
 	}
 
+	/**
+	 * Method to reassign a user story to a sprint.
+	 * @param sprintStoryData Get a serialized sprint and user story
+	 * @return Status of the operation.
+	 */
 	@POST
 	@Path("/reassignUserStory")
 	public Response reassignUserStory(SprintStoryData sprintStoryData) {
@@ -297,7 +333,10 @@ public class Resource {
 
 	}
 
-
+	/**
+	 * Method to get all user stories.
+	 * @return List of user stories and status of the operation.
+	 */
 	@GET
 	@Path("/getAllUserStories")
 	public Response getAllUserStories() {
@@ -388,7 +427,10 @@ public class Resource {
 	}
 
 */
-
+	/**
+	 * Test method on server.
+	 * @return Status of the operation.
+	 */
 	@GET
 	@Path("/test")
 	@Produces(MediaType.TEXT_PLAIN)

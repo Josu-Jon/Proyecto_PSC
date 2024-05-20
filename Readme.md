@@ -57,6 +57,11 @@ mvn verify -Pintegration-tests
 mvn verify -Pperformance-tests
 ```
 
+**Lanzamos la documentación por doxygen**
+```
+mvn doxygen:report
+```
+
 **Lanzar server**
 ```
 mvn jetty:run

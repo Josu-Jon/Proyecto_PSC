@@ -27,6 +27,9 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * ClientServer class. Defines the conection between client and server.
+ */
 public class ClientServer {
 
 	protected static final Logger logger = LogManager.getLogger();
@@ -34,11 +37,25 @@ public class ClientServer {
 	private Client client;
 	private WebTarget webTarget;
 
+	/**
+	 * Constructor
+	 * @param hostname Hostname
+	 * @param port Port
+	 * @return ClientServer conection
+	 
+	 */
 	public ClientServer(String hostname, String port) {
 		client = ClientBuilder.newClient();
 		webTarget = client.target(String.format("http://%s:%s/rest/resource", hostname, port));
 	}
 
+	/**
+	 * Register a new user story
+	 * @param id User story id
+	 * @param userStory User story description
+	 * @param estimation User story estimation
+	 * @param pbPriority User story priority
+	 */
 	public void registerUserStory(int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("registerUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -57,6 +74,10 @@ public class ClientServer {
 		}
 	}
 
+	/**
+	 * Register a new sprint
+	 * @param id Sprint number
+	 */
 	public void registerSprint(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -72,6 +93,14 @@ public class ClientServer {
 		}
 	}
 
+	/**
+	 * Assign a user story to a sprint
+	 * @param sprintId Sprint number
+	 * @param id User story id
+	 * @param userStory User story description
+	 * @param estimation User story estimation
+	 * @param pbPriority User story priority
+	 */
 	public void assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("assignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -96,6 +125,9 @@ public class ClientServer {
 	}
 
 
+	/**
+	 * Delete a sprint
+	 */
 	public void deleteSprint(int sprintId) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -111,6 +143,9 @@ public class ClientServer {
 		}
 	}
 
+	/**
+	 * Delete a user story
+	 */
 	public void deleteUserStory(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -126,6 +161,14 @@ public class ClientServer {
 		}
 	}
 
+	/**
+	 * Assign a user story to a sprint
+	 * @param sprintId Sprint number
+	 * @param id User story id
+	 * @param userStory User story description
+	 * @param estimation User story estimation
+	 * @param pbPriority User story priority
+	 */
 	public void reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -149,6 +192,10 @@ public class ClientServer {
 		}
 	}
 
+	/**
+	 * Get all user stories
+	 * @return List of user stories
+	 */
 	public List<UserStoryData> getAllUserStories() {
 
 		WebTarget registerUserWebTarget = webTarget.path("getAllUserStories");

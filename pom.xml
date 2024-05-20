@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>com.psc06</groupId>
   <artifactId>Gestor_Proyectos</artifactId>
   <version>2.0</version>
-
   <name>Gestor_Proyectos</name>
   <url>https://github.com/Josu-Jon/Proyecto_PSC</url>
-
   <properties>
+    <doxygen.config.file>${basedir}/src/main/resources/Doxyfile</doxygen.config.file>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -23,7 +20,6 @@
     <sonar.organization>josu-jon</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -40,73 +36,60 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <!--DEPENDENCIAS
     PARA JERSEY, DATANUCLEUS Y MYSQL-->
-
     <dependency>
       <groupId>org.datanucleus</groupId>
       <artifactId>javax.jdo</artifactId>
       <version>[3.2.0-release, )</version>
     </dependency>
-
     <dependency>
       <groupId>org.datanucleus</groupId>
       <artifactId>datanucleus-core</artifactId>
       <version>[6.0.0-m1, 6.9)</version>
     </dependency>
-
     <dependency>
       <groupId>org.datanucleus</groupId>
       <artifactId>datanucleus-api-jdo</artifactId>
       <version>[6.0.0-m1, 6.9)</version>
     </dependency>
-
     <dependency>
       <groupId>org.datanucleus</groupId>
       <artifactId>datanucleus-rdbms</artifactId>
       <version>[6.0.0-m1, 6.9)</version>
     </dependency>
-
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.29</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
       <version>[2.17.1, 2.39.1]</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>[2.17.1, 2.39.1]</version>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-grizzly2-http</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet-core</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
     </dependency>
-
     <!--DEPENDENCIAS
     PARA TEST-->
     <dependency>
@@ -115,33 +98,28 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>com.github.noconnor</groupId>
       <artifactId>junitperf</artifactId>
       <version>1.22.1</version>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.databene</groupId>
       <artifactId>contiperf</artifactId>
       <version>2.2.0</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>
     </dependency>
-
     <!--DEPENDENCIAS
     VARIAS -->
     <dependency>
@@ -149,15 +127,12 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured-all</artifactId>
       <version>5.4.0</version>
     </dependency>
-
   </dependencies>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -177,18 +152,15 @@
             </filesets>
           </configuration>
         </plugin>
-
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.9.0</version>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.2</version>
         </plugin>
-
         <plugin>
           <groupId>org.datanucleus</groupId>
           <artifactId>datanucleus-maven-plugin</artifactId>
@@ -200,7 +172,6 @@
             <props>${config.files.dir}/datanucleus.properties</props>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
@@ -211,7 +182,6 @@
             </supportedPackagings>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
@@ -220,7 +190,6 @@
             <mainClass>org.datanucleus.samples.jdo.tutorial.Main</mainClass>
           </configuration>
         </plugin>
-
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <configuration>
@@ -229,7 +198,6 @@
             </descriptors>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
@@ -239,7 +207,6 @@
             <nohelp>true</nohelp>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -253,17 +220,22 @@
             <excludedGroups>categories.IntegrationTest, categories.PerformanceTest</excludedGroups>
           </configuration>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>3.0.0-M7</version>
         </plugin>
-
       </plugins>
     </pluginManagement>
-
     <plugins>
+      <plugin>
+        <groupId>com.soebes.maven.plugins</groupId>
+        <artifactId>doxygen-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <configurationFile>${doxygen.config.file}</configurationFile>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -310,10 +282,8 @@
       </plugin>
     </plugins>
   </build>
-
   <!-- Perfiles que se lanzan como -Pnombredelperfil -->
   <profiles>
-
     <!-- Exec as -Pintegration-tests to run the integration-tests -->
     <profile>
       <id>integration-tests</id>
@@ -339,7 +309,6 @@
         </plugins>
       </build>
     </profile>
-
     <!-- Exec as -Pperformance-tests to run the performance-tests -->
     <profile>
       <id>performance-tests</id>
@@ -365,7 +334,6 @@
         </plugins>
       </build>
     </profile>
-
     <!-- Exec as -Pclient to run client -->
     <profile>
       <id>client</id>
@@ -393,7 +361,6 @@
         </plugins>
       </build>
     </profile>
-
     <!-- Exec as -Pgrizzly-server to run grizzly-server -->
     <profile>
       <id>grizzly-server</id>
@@ -418,5 +385,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>

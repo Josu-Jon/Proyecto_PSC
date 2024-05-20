@@ -28,14 +28,18 @@ jobs:
         run: mvn datanucleus:schema-create
       - name: Run the Maven test phase
         run: mvn test
+      - name: Install doxygen
+        run: sudo apt-get install -y doxygen
+      - name: Generate documentation
+        run: mvn doxygen:report
       - name: Launch the server in background mode 
         run: mvn jetty:run &
       - name: Sleep for 10 seconds
         uses: jakejarvis/wait-action@master
         with:
           time: '10s'
-      - name: Launch the client
-        run: mvn exec:java -Pclient
+      #- name: Launch the client
+      # run: mvn exec:java -Pclient
       - name: Upload report to Codecov with Jacoco #Upload coverage report from JaCoCo to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
