@@ -39,7 +39,7 @@ public class ClientServer {
 		webTarget = client.target(String.format("http://%s:%s/rest/resource", hostname, port));
 	}
 
-	public void registerUserStory(int id, String userStory, int estimation, int pbPriority) {
+	public Response registerUserStory(int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("registerUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
@@ -55,9 +55,10 @@ public class ClientServer {
 		} else {
 			logger.info("User Story correctly created. ");
 		}
+		return Response.ok().build();
 	}
 
-	public void registerSprint(int id) {
+	public Response registerSprint(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
@@ -70,9 +71,10 @@ public class ClientServer {
 		} else {
 			logger.info("Sprint correctly created. ");
 		}
+		return Response.ok().build();
 	}
 
-	public void assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
+	public Response assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("assignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
@@ -93,10 +95,11 @@ public class ClientServer {
 		} else {
 			logger.info("User Story correctly assigned. ");
 		}
+		return Response.ok().build();
 	}
 
 
-	public void deleteSprint(int sprintId) {
+	public Response deleteSprint(int sprintId) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
@@ -109,9 +112,10 @@ public class ClientServer {
 		} else {
 			logger.info("Sprint " + sp.getSprintNum() + " deleted. ");
 		}
+		return Response.ok().build();
 	}
 
-	public void deleteUserStory(int id) {
+	public Response deleteUserStory(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
@@ -124,14 +128,15 @@ public class ClientServer {
 		} else {
 			logger.info("User Story " + story.getId() + " deleted. ");
 		}
+		return Response.ok().build();
 	}
 
-	public void modifyUserStory(int id, String userStory, int estimation, int pbPriority){
+	public Response modifyUserStory(int id, String userStory, int estimation, int pbPriority){
 		deleteUserStory(id);
-		registerUserStory(id, userStory, estimation, pbPriority);
+		return registerUserStory(id, userStory, estimation, pbPriority);
 	}
 
-	public void reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
+	public Response reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
@@ -152,6 +157,7 @@ public class ClientServer {
 		} else {
 			logger.info("User Story " + id + " correctly deleted from sprint " + sprintId + ". ");
 		}
+		return Response.ok().build();
 	}
 
 	public List<UserStoryData> getAllUserStories() {
