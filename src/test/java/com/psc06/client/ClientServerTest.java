@@ -81,9 +81,10 @@ public class ClientServerTest {
 	public void testGetAllUserStories() {
         assertTrue(true);
 	}
-
+/*
     @Test
 	public List<UserStoryData> getUserStoriesFromSprint() {
         assertTrue(true);
 	}
+    */
 }
