@@ -273,6 +273,7 @@
               <excludes>
                   <exclude>com\psc06\client\Interface*</exclude>
                   <exclude>com\psc06\client\MainClient*</exclude>
+                  <exclude>com\psc06\server\Main*</exclude>
               </excludes>
           </configuration>
         <executions>
