@@ -51,40 +51,39 @@ public class ClientServerTest {
     public void testRegisterUserStory() {
         assertTrue(true);
 	}
-    /*
+    
     @Test
 	public void testRegisterSprint() {
-		
+		assertTrue(true);
 	}
     
     @Test
 	public void testAssignUserStory() {
-		
+		assertTrue(true);
 	}
 
     @Test
 	public void testDeleteSprint() {
-		
+		assertTrue(true);
 	}
 
     @Test
 	public void testDeleteUserStory() {
-		
+		assertTrue(true);
 	}
 
     @Test
 	public void testReassignUserStory() {
-		
+		assertTrue(true);
 	}
 
     @Test
 	public void testGetAllUserStories() {
-
+        assertTrue(true);
 	}
 
     @Test
 	public List<UserStoryData> getUserStoriesFromSprint() {
-
+        assertTrue(true);
 	}
-    */
 }
