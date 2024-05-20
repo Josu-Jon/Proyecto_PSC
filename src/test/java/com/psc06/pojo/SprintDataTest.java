@@ -2,19 +2,33 @@ package com.psc06.pojo;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SprintDataTest {
     
     SprintData sprintData;
+    private UserStoryData userStory;
+    private List<UserStoryData> userStories;
 
     @Before
     public void setUp() {
+        userStory = new UserStoryData();
+        userStory.setId(0);
+		userStory.setUserStory("userStory");
+		userStory.setEstimation(2);
+		userStory.setPbPriority(3);
+
+        userStories = new ArrayList<UserStoryData>();
+        userStories.add(userStory);
+
         sprintData = new SprintData();
         sprintData.setSprintNum(23);
         sprintData.setStartDate("2024-05-20");
         sprintData.setEndDate("2024-06-10");
+        sprintData.setUserStories(userStories);
     }
 
     @Test
@@ -34,6 +48,6 @@ public class SprintDataTest {
 
     @Test
     public void testToString() {
-        assertEquals("Sprint 23. Start date: 2024-05-20, End date: 2024-06-10", sprintData.toString());
+        assertEquals("Sprint 23. Start date: 2024-05-20, End date: 2024-06-10, Stories: [User Story 0 (userStory): [Estimacion: 2. Prioridad: 3.] --- ]", sprintData.toString());
     }
 }
