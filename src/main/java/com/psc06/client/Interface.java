@@ -32,6 +32,7 @@ public class Interface extends JPanel {
     public Interface(ClientServer clientServerAux) {
         clientServer = clientServerAux;
         tabbedPane = new JTabbedPane();
+        userStories = clientServer.getAllUserStories();
         
         // Datos de prueba
         UserStoryData usd1 = new UserStoryData();
@@ -134,7 +135,7 @@ public class Interface extends JPanel {
                         selectedStory.setEstimation(estimation);
 
                         updateUserStoriesTable();
-                        //clientServer.modifyUserStory(selectedStory.getId(), title, estimation, priority);
+                        clientServer.modifyUserStory(selectedStory.getId(), title, estimation, priority);
                         editDialog.dispose();
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(editDialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -286,7 +287,7 @@ public class Interface extends JPanel {
                             }
 
                             updateSprintTable();
-                            //clientServer.modifySprint(selectedSprint.getSprintNum(), startDate, endDate, selectedSprint.getUserStories());
+                            clientServer.modifySprint(selectedSprint.getSprintNum());
                             editDialog.dispose();
                         } catch (NumberFormatException ex) {
                             JOptionPane.showMessageDialog(editDialog, "Error al guardar el sprint.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -361,9 +362,9 @@ public class Interface extends JPanel {
                     JOptionPane.showMessageDialog(dialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+                int newId = getNextId();
                 UserStoryData newStory = new UserStoryData();
-                newStory.setId(1);
+                newStory.setId(newId);
                 newStory.setUserStory(title);
                 newStory.setEstimation(estimation);
                 newStory.setPbPriority(priority);
@@ -455,7 +456,7 @@ public class Interface extends JPanel {
 
                     sprints.add(newSprint);
                     updateSprintTable();
-                    //clientServer.registerSprint(sprintNum, startDate, endDate);
+                    clientServer.registerSprint(sprintNum);
                     dialog.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -529,5 +530,14 @@ public class Interface extends JPanel {
         } catch (ParseException e) {
             return false;
         }
+    }
+    private int getNextId() {
+        
+        int maxId = 0;
+        for (UserStoryData story : userStories) {
+            maxId = Math.max(maxId, story.getId());
+        }
+
+        return maxId + 1;
     }
 }
