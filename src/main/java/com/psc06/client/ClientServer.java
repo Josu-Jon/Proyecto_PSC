@@ -103,7 +103,6 @@ public class ClientServer {
 	 * @param estimation User story estimation
 	 * @param pbPriority User story priority
 	 */
-
 	public Response assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("assignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -128,7 +127,10 @@ public class ClientServer {
 		return Response.ok().build();
 	}
 
-
+	/**
+	 * Delete a sprint
+	 * @param sprintId Sprint number
+	 */
 	public Response deleteSprint(int sprintId) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -145,7 +147,10 @@ public class ClientServer {
 		return Response.ok().build();
 	}
 
-
+	/**
+	 * Delete a user story
+	 * @param id User story id
+	 */
 	public Response deleteUserStory(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
@@ -162,16 +167,36 @@ public class ClientServer {
 		return Response.ok().build();
 	}
 
+	/**
+	 * Modify a user story
+	 * @param id User story id
+	 * @param userStory User story description
+	 * @param estimation User story estimation
+	 * @param pbPriority User story priority
+	 * @return Response
+	 */
 	public Response modifyUserStory(int id, String userStory, int estimation, int pbPriority){
 		deleteUserStory(id);
 		return registerUserStory(id, userStory, estimation, pbPriority);
 	}
 
+	/**
+	 * Modify a sprint
+	 * @param id Sprint number
+	 */
 	public void modifySprint(int id){
 		deleteSprint(id);
 		registerSprint(id);
 	}
 
+	/**
+	 * Reassign a user story to a sprint
+	 * @param sprintId Sprint number
+	 * @param id User story id
+	 * @param userStory User story description
+	 * @param estimation User story estimation
+	 * @param pbPriority User story priority
+	 */
 	public Response reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);

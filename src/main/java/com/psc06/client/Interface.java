@@ -13,6 +13,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Interface class. Defines the graphical interface of the project manager.
+ */
 public class Interface extends JPanel {
     private JTabbedPane tabbedPane;
     private JTable usTable;
@@ -33,7 +36,7 @@ public class Interface extends JPanel {
         clientServer = clientServerAux;
         tabbedPane = new JTabbedPane();
         userStories = clientServer.getAllUserStories();
-        
+
         // Datos de prueba
         UserStoryData usd1 = new UserStoryData();
         usd1.setId(1);
@@ -65,6 +68,9 @@ public class Interface extends JPanel {
         model.addColumn("Prioridad");
         model.addColumn("Estimación");
 
+        /**
+         * JTable para mostrar las User Stories
+         */
         usTable = new JTable(model) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -83,6 +89,11 @@ public class Interface extends JPanel {
         });
 
         deleteUserStoryButton = new JButton("Eliminar User Story");
+
+        /**
+         * Elimina una User Story seleccionada
+         * 
+         */
         deleteUserStoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -92,77 +103,91 @@ public class Interface extends JPanel {
                     clientServer.deleteUserStory(id);
                     ((DefaultTableModel) usTable.getModel()).removeRow(selectedRow);
                 } else {
-                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione una User Story para eliminar.",
+                            "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
 
         editUserStoryButton = new JButton("Editar User Story");
-    editUserStoryButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = usTable.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        /**
+         * Edita una User Story seleccionada
+         */
+        editUserStoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = usTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona una User Story para editar.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            UserStoryData selectedStory = userStories.get(selectedRow);
+                UserStoryData selectedStory = userStories.get(selectedRow);
 
-            JFrame editDialog = new JFrame("Editar User Story");
-            editDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            editDialog.setSize(300, 200);
-            editDialog.setLayout(new GridLayout(4, 2));
+                JFrame editDialog = new JFrame("Editar User Story");
+                editDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                editDialog.setSize(300, 200);
+                editDialog.setLayout(new GridLayout(4, 2));
 
-            JLabel titleLabel = new JLabel("Título:");
-            JTextField titleField = new JTextField(selectedStory.getUserStory());
-            JLabel priorityLabel = new JLabel("Prioridad:");
-            JTextField priorityField = new JTextField(String.valueOf(selectedStory.getPbPriority()));
-            JLabel estimationLabel = new JLabel("Estimación:");
-            JTextField estimationField = new JTextField(String.valueOf(selectedStory.getEstimation()));
+                JLabel titleLabel = new JLabel("Título:");
+                JTextField titleField = new JTextField(selectedStory.getUserStory());
+                JLabel priorityLabel = new JLabel("Prioridad:");
+                JTextField priorityField = new JTextField(String.valueOf(selectedStory.getPbPriority()));
+                JLabel estimationLabel = new JLabel("Estimación:");
+                JTextField estimationField = new JTextField(String.valueOf(selectedStory.getEstimation()));
 
-            JButton saveButton = new JButton("Guardar");
-            saveButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        String title = titleField.getText();
-                        int priority = Integer.parseInt(priorityField.getText());
-                        int estimation = Integer.parseInt(estimationField.getText());
+                JButton saveButton = new JButton("Guardar");
+                /**
+                 * Guarda los cambios realizados en la User Story seleccionada
+                 */
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            String title = titleField.getText();
+                            int priority = Integer.parseInt(priorityField.getText());
+                            int estimation = Integer.parseInt(estimationField.getText());
 
-                        selectedStory.setUserStory(title);
-                        selectedStory.setPbPriority(priority);
-                        selectedStory.setEstimation(estimation);
+                            selectedStory.setUserStory(title);
+                            selectedStory.setPbPriority(priority);
+                            selectedStory.setEstimation(estimation);
 
-                        updateUserStoriesTable();
-                        clientServer.modifyUserStory(selectedStory.getId(), title, estimation, priority);
-                        editDialog.dispose();
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(editDialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+                            updateUserStoriesTable();
+                            clientServer.modifyUserStory(selectedStory.getId(), title, estimation, priority);
+                            editDialog.dispose();
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(editDialog,
+                                    "Prioridad y Estimación deben ser valores numéricos.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-                }
-            });
+                });
 
-            JButton cancelButton = new JButton("Cancelar");
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    editDialog.dispose();
-                }
-            });
+                /**
+                 * Cancela la edición de la User Story
+                 
+                 */
+                JButton cancelButton = new JButton("Cancelar");
+                cancelButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        editDialog.dispose();
+                    }
+                });
 
-            editDialog.add(titleLabel);
-            editDialog.add(titleField);
-            editDialog.add(priorityLabel);
-            editDialog.add(priorityField);
-            editDialog.add(estimationLabel);
-            editDialog.add(estimationField);
-            editDialog.add(cancelButton);
-            editDialog.add(saveButton);
+                editDialog.add(titleLabel);
+                editDialog.add(titleField);
+                editDialog.add(priorityLabel);
+                editDialog.add(priorityField);
+                editDialog.add(estimationLabel);
+                editDialog.add(estimationField);
+                editDialog.add(cancelButton);
+                editDialog.add(saveButton);
 
-            editDialog.setVisible(true);
-        }
-    });
+                editDialog.setVisible(true);
+            }
+        });
         JPanel userStoryButtonPanel = new JPanel(new FlowLayout());
         userStoryButtonPanel.add(createUserStoryButton);
         userStoryButtonPanel.add(deleteUserStoryButton);
@@ -197,6 +222,10 @@ public class Interface extends JPanel {
         sprintModel.addColumn("Fecha de Fin");
         sprintModel.addColumn("User Stories");
 
+        /**
+         * JTable para mostrar los Sprints
+         
+         */
         sprintTable = new JTable(sprintModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -205,6 +234,9 @@ public class Interface extends JPanel {
         };
 
         createSprintButton = new JButton("Crear Sprint");
+        /**
+         * Crea un nuevo Sprint
+         */
         createSprintButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -213,6 +245,9 @@ public class Interface extends JPanel {
         });
 
         deleteSprintButton = new JButton("Eliminar Sprint");
+        /**
+         * Elimina un Sprint seleccionado
+         */
         deleteSprintButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -222,17 +257,22 @@ public class Interface extends JPanel {
                     clientServer.deleteSprint(sprintNum);
                     ((DefaultTableModel) sprintTable.getModel()).removeRow(selectedRow);
                 } else {
-                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Sprint para eliminar.", "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Sprint para eliminar.",
+                            "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
         editSprintButton = new JButton("Editar Sprint");
+        /**
+         * Edita un Sprint seleccionado
+         */
         editSprintButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = sprintTable.getSelectedRow();
                 if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un Sprint para editar.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un Sprint para editar.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -248,7 +288,8 @@ public class Interface extends JPanel {
                 sprintNumField.setEditable(false);
 
                 JLabel storiesLabel = new JLabel("Historias de Usuario:");
-                JList<String> storiesList = new JList<>(userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+                JList<String> storiesList = new JList<>(
+                        userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
                 storiesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
                 JScrollPane storiesScrollPane = new JScrollPane(storiesList);
 
@@ -259,6 +300,9 @@ public class Interface extends JPanel {
                 JTextField endDateField = new JTextField(selectedSprint.getEndDate());
 
                 JButton saveButton = new JButton("Guardar");
+                /**
+                 * Guarda los cambios realizados en el Sprint seleccionado
+                 */
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -266,11 +310,14 @@ public class Interface extends JPanel {
                             String startDate = startDateField.getText();
                             String endDate = endDateField.getText();
                             if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
-                                JOptionPane.showMessageDialog(editDialog, "El formato de fecha debe ser yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(editDialog, "El formato de fecha debe ser yyyy-MM-dd",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
                             if (!isEndDateAfterStartDate(startDate, endDate)) {
-                                JOptionPane.showMessageDialog(editDialog, "La fecha de fin debe ser posterior a la fecha de inicio", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(editDialog,
+                                        "La fecha de fin debe ser posterior a la fecha de inicio", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
@@ -290,7 +337,8 @@ public class Interface extends JPanel {
                             clientServer.modifySprint(selectedSprint.getSprintNum());
                             editDialog.dispose();
                         } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(editDialog, "Error al guardar el sprint.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(editDialog, "Error al guardar el sprint.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 });
@@ -335,6 +383,9 @@ public class Interface extends JPanel {
         updateSprintTable();
     }
 
+    /**
+     * Crea un diálogo para crear una nueva User Story
+     */
     private void createUserStoryDialog() {
         JFrame dialog = new JFrame("Crear Nueva User Story");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -349,17 +400,21 @@ public class Interface extends JPanel {
         JTextField estimationField = new JTextField();
 
         JButton createButton = new JButton("Crear");
+        /**
+         * Crea una nueva User Story con los datos ingresados
+         */
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String title = titleField.getText();
                 int priority, estimation;
-                
+
                 try {
                     priority = Integer.parseInt(priorityField.getText());
                     estimation = Integer.parseInt(estimationField.getText());
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialog, "Prioridad y Estimación deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Prioridad y Estimación deben ser valores numéricos.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 int newId = getNextId();
@@ -375,7 +430,7 @@ public class Interface extends JPanel {
                 dialog.dispose();
             }
         });
-        
+
         JButton cancelButton = new JButton("Cancelar");
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -396,14 +451,21 @@ public class Interface extends JPanel {
         dialog.setVisible(true);
     }
 
+    /**
+     * Actualiza la tabla de User Stories
+     */
     private void updateUserStoriesTable() {
         DefaultTableModel model = (DefaultTableModel) usTable.getModel();
         model.setRowCount(0);
         for (UserStoryData usd : userStories) {
-            model.addRow(new Object[]{usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation()});
+            model.addRow(new Object[] { usd.getId(), usd.getUserStory(), usd.getPbPriority(), usd.getEstimation() });
         }
     }
 
+
+    /**
+     * Crea un diálogo para crear un nuevo Sprint
+     */
     private void createSprintDialog() {
         JFrame dialog = new JFrame("Crear Nuevo Sprint");
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -414,7 +476,8 @@ public class Interface extends JPanel {
         JTextField sprintNumField = new JTextField();
 
         JLabel storiesLabel = new JLabel("Historias de Usuario:");
-        JList<String> storiesList = new JList<>(userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+        JList<String> storiesList = new JList<>(
+                userStories.stream().map(UserStoryData::getUserStory).toArray(String[]::new));
         storiesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         JScrollPane storiesScrollPane = new JScrollPane(storiesList);
 
@@ -425,6 +488,9 @@ public class Interface extends JPanel {
         JTextField endDateField = new JTextField();
 
         JButton createButton = new JButton("Crear");
+        /**
+         * Crea un nuevo Sprint con los datos ingresados
+         */
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -433,18 +499,20 @@ public class Interface extends JPanel {
                     String startDate = startDateField.getText();
                     String endDate = endDateField.getText();
                     if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
-                        JOptionPane.showMessageDialog(dialog, "El formato de fecha debe ser yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(dialog, "El formato de fecha debe ser yyyy-MM-dd", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (!isEndDateAfterStartDate(startDate, endDate)) {
-                        JOptionPane.showMessageDialog(dialog, "La fecha de fin debe ser posterior a la fecha de inicio", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(dialog, "La fecha de fin debe ser posterior a la fecha de inicio",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     SprintData newSprint = new SprintData();
                     newSprint.setSprintNum(sprintNum);
                     newSprint.setStartDate(startDate);
                     newSprint.setEndDate(endDate);
-                    
+
                     for (String selectedStoryTitle : storiesList.getSelectedValuesList()) {
                         for (UserStoryData usd : userStories) {
                             if (usd.getUserStory().equals(selectedStoryTitle)) {
@@ -459,12 +527,16 @@ public class Interface extends JPanel {
                     clientServer.registerSprint(sprintNum);
                     dialog.dispose();
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
         JButton cancelButton = new JButton("Cancelar");
+        /**
+         * Cancela la creación del Sprint
+         */
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -486,15 +558,23 @@ public class Interface extends JPanel {
         dialog.setVisible(true);
     }
 
+    /**
+     * Actualiza la tabla de Sprints
+     */
     private void updateSprintTable() {
         DefaultTableModel model = (DefaultTableModel) sprintTable.getModel();
         model.setRowCount(0);
         for (SprintData sprint : sprints) {
-            String userStoriesStr = String.join(", ", sprint.getUserStories().stream().map(UserStoryData::getUserStory).toArray(String[]::new));
-            model.addRow(new Object[]{sprint.getSprintNum(), sprint.getStartDate(), sprint.getEndDate(), userStoriesStr});
+            String userStoriesStr = String.join(", ",
+                    sprint.getUserStories().stream().map(UserStoryData::getUserStory).toArray(String[]::new));
+            model.addRow(
+                    new Object[] { sprint.getSprintNum(), sprint.getStartDate(), sprint.getEndDate(), userStoriesStr });
         }
     }
 
+    /**
+     * Muestra la ventana de la interfaz
+     */
     public void mostrarVentana() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -508,6 +588,12 @@ public class Interface extends JPanel {
         });
     }
 
+    /**
+     * Comprueba si la fecha de fin es posterior a la fecha de inicio
+     * @param startDateText Fecha de inicio
+     * @param endDateText Fecha de fin
+     * @return true si la fecha de fin es posterior a la fecha de inicio, false en caso contrario
+     */
     private boolean isEndDateAfterStartDate(String startDateText, String endDateText) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -521,6 +607,11 @@ public class Interface extends JPanel {
         }
     }
 
+    /**
+     * Comprueba si la fecha tiene el formato correcto
+     * @param dateString Fecha
+     * @return true si la fecha tiene el formato correcto, false en caso contrario
+     */
     private boolean isValidDateFormat(String dateString) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -531,8 +622,13 @@ public class Interface extends JPanel {
             return false;
         }
     }
+
+    /**
+     * Obtiene el siguiente ID para una User Story
+     * @return Siguiente ID
+     */
     private int getNextId() {
-        
+
         int maxId = 0;
         for (UserStoryData story : userStories) {
             maxId = Math.max(maxId, story.getId());
