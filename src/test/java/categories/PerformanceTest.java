@@ -1,6 +1,8 @@
 package categories;
 
-//// this interface is used to annotate the performance test
+/**
+ * PerformanceTest interface. Just for maven groups.
+ */
 public interface PerformanceTest {
     
 }

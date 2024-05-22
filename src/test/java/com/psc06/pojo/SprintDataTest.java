@@ -7,12 +7,18 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Unit tests for Sprint serialized class
+ */
 public class SprintDataTest {
     
     SprintData sprintData;
     private UserStoryData userStory;
     private List<UserStoryData> userStories;
 
+    /**
+     * Set up before unit tests for sprint data
+     */
     @Before
     public void setUp() {
         userStory = new UserStoryData();
@@ -31,11 +37,17 @@ public class SprintDataTest {
         sprintData.setUserStories(userStories);
     }
 
+    /**
+     * Test method for {@link com.psc06.pojo.SprintData#getId()}.
+     */
     @Test
     public void testGetSprintNum() {
         assertEquals(23, sprintData.getSprintNum());
     }
 
+    /**
+     * Test method for {@link com.psc06.pojo.SprintData#setId(int)}.
+     */
     @Test
     public void testGetStartDate() {
         assertEquals("2024-05-20", sprintData.getStartDate());
