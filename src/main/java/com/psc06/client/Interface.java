@@ -56,9 +56,9 @@ public class Interface extends JPanel {
         usd3.setEstimation(3);
         usd3.setPbPriority(5);
 
-        userStories.add(usd1);
-        userStories.add(usd2);
-        userStories.add(usd3);
+        //userStories.add(usd1);
+        //userStories.add(usd2);
+        //userStories.add(usd3);
 
         // Panel para User Stories
         JPanel userStoryPanel = new JPanel(new BorderLayout());
