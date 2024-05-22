@@ -130,6 +130,10 @@ public class ClientServer {
 		deleteUserStory(id);
 		registerUserStory(id, userStory, estimation, pbPriority);
 	}
+	public void modifySprint(int id){
+		deleteSprint(id);
+		registerSprint(id);
+	}
 
 	public void reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
