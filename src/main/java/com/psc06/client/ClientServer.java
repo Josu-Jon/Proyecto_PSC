@@ -78,6 +78,7 @@ public class ClientServer {
 	/**
 	 * Register a new sprint
 	 * @param id Sprint number
+	 * @return Response
 	 */
 	public Response registerSprint(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("registerSprint");
@@ -102,6 +103,7 @@ public class ClientServer {
 	 * @param userStory User story description
 	 * @param estimation User story estimation
 	 * @param pbPriority User story priority
+	 * @return Response
 	 */
 	public Response assignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("assignUserStory");
@@ -130,6 +132,7 @@ public class ClientServer {
 	/**
 	 * Delete a sprint
 	 * @param sprintId Sprint number
+	 * @return Response
 	 */
 	public Response deleteSprint(int sprintId) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
@@ -150,6 +153,7 @@ public class ClientServer {
 	/**
 	 * Delete a user story
 	 * @param id User story id
+	 * @return Response
 	 */
 	public Response deleteUserStory(int id) {
 		WebTarget registerUserWebTarget = webTarget.path("deleteUserStory");
@@ -183,6 +187,7 @@ public class ClientServer {
 	/**
 	 * Modify a sprint
 	 * @param id Sprint number
+	 * @return Response
 	 */
 	public Response modifySprint(int id){
 		deleteSprint(id);
@@ -196,6 +201,7 @@ public class ClientServer {
 	 * @param userStory User story description
 	 * @param estimation User story estimation
 	 * @param pbPriority User story priority
+	 * @return Response
 	 */
 	public Response reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
