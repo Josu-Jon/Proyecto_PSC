@@ -15,10 +15,18 @@ public class SprintData {
         this.userStories = new ArrayList<>();
     }
 
+    /**
+     * Constructor
+     * @param sprintNum Sprint number
+     */
     public int getSprintNum() {
         return sprintNum;
     }
 
+    /**
+     * Get the sprint number
+     * @return Sprint number
+     */
     public void setSprintNum(int sprintNum) {
         this.sprintNum = sprintNum;
     }

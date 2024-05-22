@@ -28,6 +28,10 @@ jobs:
         run: mvn datanucleus:schema-create
       - name: Run the Maven test phase
         run: mvn test
+      - name: Install doxygen
+        run: sudo apt-get install -y doxygen
+      - name: Generate documentation
+        run: mvn doxygen:report
       - name: Launch the server in background mode 
         run: mvn jetty:run &
       - name: Sleep for 4 seconds
