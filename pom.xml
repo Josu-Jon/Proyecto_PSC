@@ -246,6 +246,7 @@
           <version>3.0.0</version>
           <configuration>
             <argLine>
+              @{argLine}
               --add-opens java.base/java.lang=ALL-UNNAMED
               --add-opens java.base/java.util.concurrent=ALL-UNNAMED
               --add-opens java.base/java.util.concurrent.atomic=ALL-UNNAMED
@@ -268,12 +269,13 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.11</version>
-        <configuration>
-          <excludes>
-            <exclude>**/MainClient.class</exclude>
-            <exclude>**/ClientServer.class</exclude>
-          </excludes>
-        </configuration>
+          <configuration>
+              <excludes>
+                  <exclude>com\psc06\client\Interface*</exclude>
+                  <exclude>com\psc06\client\MainClient*</exclude>
+                  <exclude>com\psc06\server\Main*</exclude>
+              </excludes>
+          </configuration>
         <executions>
           <execution>
             <goals>

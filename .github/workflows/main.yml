@@ -28,6 +28,12 @@ jobs:
         run: mvn datanucleus:schema-create
       - name: Run the Maven test phase
         run: mvn test
+      - name: Launch the server in background mode 
+        run: mvn jetty:run &
+      - name: Sleep for 4 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '4s'
       - name: Upload report to Codecov with Jacoco #Upload coverage report from JaCoCo to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
