@@ -171,11 +171,6 @@ public class ClientServer {
 		return registerSprint(id);
 	}
 
-	public void modifySprint(int id){
-		deleteSprint(id);
-		registerSprint(id);
-	}
-
 	public Response reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
 		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
