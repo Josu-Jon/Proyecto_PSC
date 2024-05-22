@@ -167,15 +167,23 @@ public class ClientServer {
 
 		Response response = invocationBuilder.get();
 		String listString= response.readEntity(String.class);
+		logger.error(response.getStatus());
+		logger.error(listString);
 
 		Gson gson = new Gson();
 		// create the type for the collection. In this case define that the collection is of type Dataset
 		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
 		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
-		
-		for (UserStoryData us : stories) {
-			logger.info(us.toString());
+		logger.error(stories);
+
+		if(stories != null){
+			for (UserStoryData us : stories) {
+				logger.info(us.toString());
+			}
+		}else{
+			logger.error("Not found any User Story");
 		}
+		
 
 		return stories;
 	}
