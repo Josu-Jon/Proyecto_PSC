@@ -290,4 +290,51 @@ public class ResourceTest {
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
+
+
+    /**
+     * Test para comprobar que se devuelven todas las historias de usuario de un sprint
+     */
+    @Test
+    public void testGetAllUserStoryFromSprint(){
+
+        // Preparamos el persistence manager para devolver el mock
+        List<UserStory> us2 = new ArrayList<UserStory>();
+
+        SprintData sp = new SprintData();
+        sp.setSprintNum(1);
+
+        UserStoryData userStoryData = new UserStoryData();
+        userStoryData.setEstimation(3);
+        userStoryData.setPbPriority(2);
+        userStoryData.setUserStory("Test");
+        userStoryData.setId(1);
+        sp.addUserStory(userStoryData);
+
+        @SuppressWarnings("unchecked")
+        Query<Sprint> query = mock(Query.class);
+        when(persistenceManager.newQuery(Sprint.class)).thenReturn(query);
+
+        us2.add(new UserStory(1, "Test", 3, 2));
+
+
+        SprintStoryData sprintStoryData = new SprintStoryData();
+        sprintStoryData.setSprintData(sp);
+        sprintStoryData.setUserStoryData(userStoryData);
+
+        UserStory user = new UserStory(1, "Test", 3, 2);
+        us2.add(user);
+
+        when(query.execute()).thenReturn(sp);
+
+        //Llamamos al metodo a testear
+        Response response = resource.getUserStoriesFromSprint(sp);
+
+		// create the type for the collection. In this case define that the collection is of type Dataset
+        
+        assertEquals(sp.getUserStories().toString(), "["+user.toString()+"]");
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
 }

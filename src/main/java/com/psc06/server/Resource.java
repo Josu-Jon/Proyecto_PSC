@@ -40,8 +40,8 @@ public class Resource {
 	protected static final Logger logger = LogManager.getLogger();
 
 	private int cont = 0;
-	private PersistenceManager pm=null;
-	private Transaction tx=null;
+	private PersistenceManager pm = null;
+	private Transaction tx = null;
 
 	/**
 	 * Constructor for the Resource class.
@@ -51,59 +51,56 @@ public class Resource {
 		this.pm = pmf.getPersistenceManager();
 		this.tx = pm.currentTransaction();
 	}
-	
+
 	/**
 	 * Method to register a new sprint.
-	 * @param sprintData Get a serialized sprint 
+	 * 
+	 * @param sprintData Get a serialized sprint
 	 * @return Response with the status of the operation.
 	 */
 	@POST
 	@Path("/registerSprint")
 	public Response registerSprint(SprintData sprintData) {
-		try
-        {	
-            tx.begin();
-            logger.info("Checking whether the user already exits or not: '{}'", sprintData.getSprintNum());
+		try {
+			tx.begin();
+			logger.info("Checking whether the user already exits or not: '{}'", sprintData.getSprintNum());
 			Sprint sprint = null;
 			try {
 				sprint = pm.getObjectById(Sprint.class, sprintData.getSprintNum());
 			} catch (JDOObjectNotFoundException jonfe) {
 				logger.info("Exception launched: {}", jonfe.getMessage());
 			}
-			
+
 			if (sprint != null) {
 				logger.info("Sprint already created: {}", sprint);
 			} else {
 				logger.info("Creating sprint: {}", sprint);
 				sprint = new Sprint(sprintData.getSprintNum());
-				pm.makePersistent(sprint);					 
+				pm.makePersistent(sprint);
 				logger.info("Sprint created: {}", sprint);
 			}
 			tx.commit();
 			return Response.ok().build();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-      
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
 		}
 	}
 
 	/**
 	 * Method to delete a sprint.
+	 * 
 	 * @param sprintData Get a serialized sprint
 	 * @return Status of the operation.
 	 */
 	@POST
 	@Path("/deleteSprint")
 	public Response deleteSprint(SprintData sprintData) {
-		try
-        {	
-            tx.begin();
-            logger.info("Checking whether the Sprint already exits: '{}'", sprintData.getSprintNum());
+		try {
+			tx.begin();
+			logger.info("Checking whether the Sprint already exits: '{}'", sprintData.getSprintNum());
 			Sprint sprint = null;
 			try {
 				sprint = pm.getObjectById(Sprint.class, sprintData.getSprintNum());
@@ -119,29 +116,26 @@ public class Resource {
 			}
 			tx.commit();
 			return Response.ok().build();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-      
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
 		}
 	}
 
 	/**
 	 * Method to register a new user story.
+	 * 
 	 * @param userStoryData Get a serialized user story
 	 * @return Status of the operation.
 	 */
 	@POST
 	@Path("/registerUserStory")
 	public Response registerUserStory(UserStoryData userStoryData) {
-		try
-        {	
-            tx.begin();
-            logger.info("Checking whether the UserStory already exits or not: '{}'", userStoryData.getId());
+		try {
+			tx.begin();
+			logger.info("Checking whether the UserStory already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
@@ -161,35 +155,33 @@ public class Resource {
 				logger.info("Updated values: {}", story);
 			} else {
 				logger.info("Creating story: {}", story);
-				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(), userStoryData.getEstimation(), userStoryData.getPbPriority());
-				pm.makePersistent(story);					 
+				story = new UserStory(userStoryData.getId(), userStoryData.getUserStory(),
+						userStoryData.getEstimation(), userStoryData.getPbPriority());
+				pm.makePersistent(story);
 				logger.info("User Story created: {}", story);
 			}
 			tx.commit();
 			return Response.ok().build();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-      
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
 		}
 	}
 
 	/**
 	 * Method to delete a user story.
+	 * 
 	 * @param userStoryData Get a serialized user story
 	 * @return Status of the operation.
 	 */
 	@POST
 	@Path("/deleteUserStory")
 	public Response deleteUserStory(UserStoryData userStoryData) {
-		try
-        {	
-            tx.begin();
-            logger.info("Checking whether the userstory already exits or not: '{}'", userStoryData.getId());
+		try {
+			tx.begin();
+			logger.info("Checking whether the userstory already exits or not: '{}'", userStoryData.getId());
 			UserStory story = null;
 			try {
 				story = pm.getObjectById(UserStory.class, userStoryData.getId());
@@ -205,19 +197,17 @@ public class Resource {
 			}
 			tx.commit();
 			return Response.ok().build();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-      
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
 		}
 	}
 
 	/**
 	 * Method to assign a user story to a sprint.
+	 * 
 	 * @param sprintStoryData Get a serialized sprint and user story
 	 * @return Status of the operation.
 	 */
@@ -238,7 +228,6 @@ public class Resource {
 				logger.info("Sprint retrieved: {}", sprint.toString());
 				if (sprint != null) {
 
-					
 					try {
 						story = pm.getObjectById(UserStory.class, sprintStoryData.getUserStoryData().getId());
 					} catch (JDOObjectNotFoundException jonfe) {
@@ -246,26 +235,27 @@ public class Resource {
 					}
 
 					if (story != null) {
-						
+
 						sprint.getAllStories().add(story);
 						pm.makePersistent(sprint);
 
 					} else {
 						logger.info("Creating userstory: {}", story);
-						story = new UserStory(sprintStoryData.getUserStoryData().getId(), sprintStoryData.getUserStoryData().getUserStory(),
-											sprintStoryData.getUserStoryData().getEstimation(), sprintStoryData.getUserStoryData().getPbPriority());
+						story = new UserStory(sprintStoryData.getUserStoryData().getId(),
+								sprintStoryData.getUserStoryData().getUserStory(),
+								sprintStoryData.getUserStoryData().getEstimation(),
+								sprintStoryData.getUserStoryData().getPbPriority());
 						pm.makePersistent(story);
 						sprint.getAllStories().add(story);
 						pm.makePersistent(sprint);
 						logger.info("Assigned story ! ");
 					}
 
-
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			tx.commit();
 		} finally {
 			if (tx.isActive()) {
@@ -282,6 +272,7 @@ public class Resource {
 
 	/**
 	 * Method to reassign a user story to a sprint.
+	 * 
 	 * @param sprintStoryData Get a serialized sprint and user story
 	 * @return Status of the operation.
 	 */
@@ -302,7 +293,6 @@ public class Resource {
 				logger.info("Sprint retrieved: {}", sprint.toString());
 				if (sprint != null) {
 
-					
 					try {
 						story = pm.getObjectById(UserStory.class, sprintStoryData.getUserStoryData().getId());
 					} catch (JDOObjectNotFoundException jonfe) {
@@ -323,8 +313,7 @@ public class Resource {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -336,6 +325,7 @@ public class Resource {
 
 	/**
 	 * Method to get all user stories.
+	 * 
 	 * @return List of user stories and status of the operation.
 	 */
 	@GET
@@ -349,11 +339,11 @@ public class Resource {
 			logger.info("Creating query ...");
 
 			try (Query<UserStory> q = pm.newQuery(UserStory.class)) {
-				
+
 				userStories = q.executeList();
-				
+
 				logger.info("User Stories retrieved: -> {}", userStories.toString());
-				
+
 				Gson aux = new Gson();
 				String returnedJson = aux.toJson(userStories);
 
@@ -363,8 +353,7 @@ public class Resource {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -374,19 +363,17 @@ public class Resource {
 		return Response.status(Status.EXPECTATION_FAILED).entity(null).build();
 	}
 
-/*
 	@POST
 	@Path("/getAllUserStoriesFromSprint")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserStoriesFromSprint(SprintData sprintId) {
 
 		List<UserStory> userStories = null;
-		Sprint sp  = null;
+		Sprint sp = null;
 
-		try
-        {	
-            tx.begin();
-            logger.info("Checking whether the sprint already exits: '{}'", sprintId);
+		try {
+			tx.begin();
+			logger.info("Checking whether the sprint already exits: '{}'", sprintId);
 
 			try {
 				sp = pm.getObjectById(Sprint.class, sprintId.getSprintNum());
@@ -394,43 +381,35 @@ public class Resource {
 			} catch (JDOObjectNotFoundException jonfe) {
 
 				logger.info("Exception launched: {}", jonfe.getMessage());
-				
+
 			}
 
 			if (sp != null) {
 
-				userStories = sp.getAllStories();
+				userStories = new ArrayList<UserStory>(sp.getAllStories());
 
-				if (userStories != null) {
-					logger.info("User Stories retrieved: -> {}", userStories.toString());
+				logger.info("User Stories retrieved: -> {}", userStories.toString());
 
-					Gson aux = new Gson();
-					String returnedJson = aux.toJson(userStories);
+				Gson aux = new Gson();
+				String returnedJson = aux.toJson(userStories);
 
-					return Response.ok(returnedJson).build();
-				}
-				return Response.ok("No hay User Stories.").build();
+				return Response.ok(returnedJson).build();
 			} else {
 				logger.info("Sprint no existe");
 			}
 			tx.commit();
 
 			return Response.ok().build();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-			return Response.status(Status.BAD_REQUEST).entity("Los datos implementados no son correctos").build();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
 		}
-		
 	}
 
-*/
 	/**
 	 * Test method on server.
+	 * 
 	 * @return Status of the operation.
 	 */
 	@GET
@@ -440,4 +419,3 @@ public class Resource {
 		return Response.ok("Test!").build();
 	}
 }
-
