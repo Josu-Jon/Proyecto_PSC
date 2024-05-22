@@ -280,6 +280,7 @@ public class Resource {
 					} else {
 						logger.info("Error. El user story introducido no existe. ");
 					}
+					tx.commit();
 					return Response.ok().build();
 
 				}
@@ -287,7 +288,7 @@ public class Resource {
 				e.printStackTrace();
 			}
 			
-			tx.commit();
+			
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -317,13 +318,14 @@ public class Resource {
 				Gson aux = new Gson();
 				String returnedJson = aux.toJson(userStories);
 
+				tx.commit();
 				return Response.ok(returnedJson).build();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-			tx.commit();
+			
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

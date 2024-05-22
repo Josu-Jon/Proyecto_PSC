@@ -135,9 +135,9 @@ public class ClientServer {
 		deleteUserStory(id);
 		return registerUserStory(id, userStory, estimation, pbPriority);
 	}
-	public void modifySprint(int id){
+	public Response modifySprint(int id){
 		deleteSprint(id);
-		registerSprint(id);
+		return registerSprint(id);
 	}
 
 	public Response reassignUserStory(int sprintId, int id, String userStory, int estimation, int pbPriority) {
@@ -171,14 +171,11 @@ public class ClientServer {
 
 		Response response = invocationBuilder.get();
 		String listString= response.readEntity(String.class);
-		logger.error(response.getStatus());
-		logger.error(listString);
 
 		Gson gson = new Gson();
 		// create the type for the collection. In this case define that the collection is of type Dataset
 		Type userStoryDataListType = new TypeToken<Collection<UserStoryData>>() {}.getType();
 		List<UserStoryData> stories = gson.fromJson(listString, userStoryDataListType);
-		logger.error(stories);
 
 		if(stories != null){
 			for (UserStoryData us : stories) {
