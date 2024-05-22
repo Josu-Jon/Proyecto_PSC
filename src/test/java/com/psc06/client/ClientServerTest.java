@@ -72,7 +72,6 @@ public class ClientServerTest {
         when(client.target(anyString())).thenReturn(webTarget);
         when(webTarget.path(anyString())).thenReturn(webTarget);
         when(webTarget.request(anyString())).thenReturn(invocationBuilder);
-        //when(invocationBuilder.post(any(Entity.class))).thenReturn(Response.ok().build());
     }
 
     @Test
@@ -81,6 +80,24 @@ public class ClientServerTest {
         when(webTarget.path("registerUserStory")).thenReturn(webTarget);
 
         Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.registerUserStory(1, "Test Story", 5, 10).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(usdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, usdCaptor.getValue().getEntity().getId());
+        assertEquals("Test Story", usdCaptor.getValue().getEntity().getUserStory());
+        assertEquals(5, usdCaptor.getValue().getEntity().getEstimation());
+        assertEquals(10, usdCaptor.getValue().getEntity().getPbPriority());
+    }
+
+    @Test
+    public void testRegisterUserStoryFalse() {
+
+        when(webTarget.path("registerUserStory")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
         when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
 
@@ -108,10 +125,41 @@ public class ClientServerTest {
     }
 
     @Test
+    public void testRegisterSprintFalse() {
+        when(webTarget.path("registerSprint")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.registerSprint(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(sdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, sdCaptor.getValue().getEntity().getSprintNum());
+    }
+
+    @Test
     public void testAssignUserStory() {
         when(webTarget.path("assignUserStory")).thenReturn(webTarget);
 
         Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.assignUserStory(1, 1, "Test Story", 5, 10).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(ssdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, ssdCaptor.getValue().getEntity().getUserStoryData().getId());
+        assertEquals("Test Story", ssdCaptor.getValue().getEntity().getUserStoryData().getUserStory());
+        assertEquals(5, ssdCaptor.getValue().getEntity().getUserStoryData().getEstimation());
+        assertEquals(10, ssdCaptor.getValue().getEntity().getUserStoryData().getPbPriority());
+    }
+
+    @Test
+    public void testAssignUserStoryFalse() {
+        when(webTarget.path("assignUserStory")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
         when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
 
@@ -139,6 +187,20 @@ public class ClientServerTest {
     }
 
     @Test
+    public void testDeleteSprintFalse() {
+        when(webTarget.path("deleteSprint")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.deleteSprint(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(sdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, sdCaptor.getValue().getEntity().getSprintNum());
+    }
+
+    @Test
     public void testDeleteUserStory() {
         when(webTarget.path("deleteUserStory")).thenReturn(webTarget);
         
@@ -153,11 +215,38 @@ public class ClientServerTest {
     }
 
     @Test
-    public void testModifyUserStory() {
-        response = Response.ok().build();
-        assertEquals(Response.Status.OK, response.getStatusInfo());
-    }
+    public void testDeleteUserStoryFalse() {
+        when(webTarget.path("deleteUserStory")).thenReturn(webTarget);
+        
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
 
+        assertEquals(Response.Status.OK, clientServer.deleteUserStory(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(usdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, usdCaptor.getValue().getEntity().getId());
+    }
+/*
+    @Test
+    public void testModifyUserStory() {
+        Response response = Response.ok().build();
+
+        when(clientServer.deleteUserStory(1)).thenReturn(Response.ok().build());
+        when(clientServer.registerUserStory(1, "Test Story", 5, 10)).thenReturn(response);
+        assertEquals(Response.Status.OK, clientServer.modifyUserStory(1, "Test Story", 5, 10).getStatusInfo());
+    }
+*/
+/*
+    @Test
+    public void testModifySprint() {
+        Response response = Response.ok().build();
+
+        when(clientServer.deleteSprint(1)).thenReturn(response);
+        when(clientServer.registerSprint(1)).thenReturn(response);
+        assertEquals(Response.Status.OK, clientServer.modifySprint(1).getStatusInfo());
+    }
+*/
     @Test
     public void testReassignUserStory() {
         when(webTarget.path("reassignUserStory")).thenReturn(webTarget);
@@ -175,10 +264,28 @@ public class ClientServerTest {
         assertEquals(5, ssdCaptor.getValue().getEntity().getUserStoryData().getEstimation());
         assertEquals(10, ssdCaptor.getValue().getEntity().getUserStoryData().getPbPriority());
     }
+
+    @Test
+    public void testReassignUserStoryFalse() {
+        when(webTarget.path("reassignUserStory")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.reassignUserStory(1, 1, "Test Story", 5, 10).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(ssdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, ssdCaptor.getValue().getEntity().getSprintData().getSprintNum());
+        assertEquals(1, ssdCaptor.getValue().getEntity().getUserStoryData().getId());
+        assertEquals("Test Story", ssdCaptor.getValue().getEntity().getUserStoryData().getUserStory());
+        assertEquals(5, ssdCaptor.getValue().getEntity().getUserStoryData().getEstimation());
+        assertEquals(10, ssdCaptor.getValue().getEntity().getUserStoryData().getPbPriority());
+    }
 /*
     @Test
     public void testGetAllUserStories() {
-        List<UserStoryData> stories = new ArrayList<UserStoryData>();
+          List<UserStoryData> stories = new ArrayList<UserStoryData>();
         List<UserStoryData> mockStories = new ArrayList<UserStoryData>();
         UserStoryData usd1 = new UserStoryData();
         usd1.setId(1);
@@ -195,11 +302,15 @@ public class ClientServerTest {
         mockStories.add(usd1);
         mockStories.add(usd2);
 
+        String jsonResponse = "[{\"id\":1,\"userStory\":\"Story 1\",\"estimation\":5,\"pbPriority\":1},{\"id\":2,\"userStory\":\"Story 2\",\"estimation\":3,\"pbPriority\":2}]";
+
+        //Response response = Response.ok(jsonResponse).build();
+
         when(webTarget.path("getAllUserStories")).thenReturn(webTarget);
         when(invocationBuilder.get()).thenReturn(response);
 
         // Simular la respuesta del servidor
-        String jsonResponse = "[{\"id\":1,\"userStory\":\"Story 1\",\"estimation\":5,\"pbPriority\":1},{\"id\":2,\"userStory\":\"Story 2\",\"estimation\":3,\"pbPriority\":2}]";
+        
         when(response.readEntity(String.class)).thenReturn(jsonResponse);
         when(response.getStatus()).thenReturn(Response.Status.OK.getStatusCode());        
 
@@ -216,7 +327,9 @@ public class ClientServerTest {
         verify(webTarget).path("getAllUserStories");
         
         // Comprobamos que la lista de historias de usuario se obtuvo correctamente
-        
+        assertEquals(stories.getClass(), mockStories.getClass());
+
+
         assertNotNull(stories);
         assertEquals(2, stories.size());
         assertEquals("Story 1", stories.get(0).getUserStory());
@@ -225,7 +338,7 @@ public class ClientServerTest {
         assertEquals("Story 2", stories.get(1).getUserStory());
         assertEquals(3, stories.get(1).getEstimation());
         assertEquals(2, stories.get(1).getPbPriority());
-       
+
     }
 */
 }
