@@ -90,7 +90,7 @@ public class ProyectData
      * Añade un sprint
      * @param sprints Sprint
      */
-    public void addUserStory(SprintData sprint) {
+    public void addSprint(SprintData sprint) {
         this.sprints.add(sprint);
     }
 

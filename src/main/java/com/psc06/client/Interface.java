@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 import com.psc06.pojo.UserStoryData;
+import com.psc06.pojo.ProyectData;
 import com.psc06.pojo.SprintData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ public class Interface extends JPanel {
     private JTabbedPane tabbedPane;
     private JTable usTable;
     private JTable sprintTable;
+    private JTable proyectTable; //
     private JButton createUserStoryButton;
     private JButton deleteUserStoryButton;
     private JButton createSprintButton;
@@ -27,8 +29,13 @@ public class Interface extends JPanel {
     private JButton deleteSprintButton;
     private JButton editUserStoryButton;
 
+    private JButton createProyectButton;
+    private JButton deleteProyectButton;
+    private JButton editProyectButton;
+
     private List<UserStoryData> userStories = new ArrayList<>();
     private List<SprintData> sprints = new ArrayList<>();
+    private List<ProyectData> proyects = new ArrayList<>();
 
     private ClientServer clientServer;
 
@@ -375,6 +382,90 @@ public class Interface extends JPanel {
         sprintPanel.add(sprintScrollPane, BorderLayout.CENTER);
 
         tabbedPane.addTab("Sprints", sprintPanel);
+
+        
+        //Panel para los proyectos
+        JPanel proyectPanel = new JPanel(new BorderLayout());
+
+        //Datos de prueba
+        ProyectData proyect1 = new ProyectData();
+        proyect1.setIdProyect(1);
+        proyect1.setStartDate("2023-03-01");
+        proyect1.setEndDate("2023-03-30");
+        proyect1.addSprint(sprint1);
+        proyect1.addSprint(sprint2);
+        
+        ProyectData proyect2 = new ProyectData();
+        proyect1.setIdProyect(2);
+        proyect1.setStartDate("2023-03-01");
+        proyect1.setEndDate("2023-03-15");
+        proyect1.addSprint(sprint1);
+        
+        proyects.add(proyect1);
+        proyects.add(proyect2);/**/
+
+        DefaultTableModel proyectModel = new DefaultTableModel();
+        proyectModel.addColumn("ID Proyecto");
+        proyectModel.addColumn("Fecha de Inicio");
+        proyectModel.addColumn("Fecha de Fin");
+        proyectModel.addColumn("Sprints asignados"); 
+
+        /**
+         * JTable para mostrar los Proyectos
+         
+         */
+        proyectTable = new JTable(proyectModel) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        createProyectButton= new JButton("Crear Proyecto");
+        /**
+         * Crea un nuevo proyecto
+         */
+        createProyectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //añadir
+            }
+        });
+
+        deleteProyectButton= new JButton("Eliminar Proyecto");
+        /**
+         * Elimina un proyecto seleccionado
+         */
+        deleteProyectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //eliminar
+            }
+        });
+
+        editProyectButton= new JButton("Editar Proyecto");
+        /**
+         * Edita un proyecto seleccionado
+         */
+        editProyectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //añadir
+            }
+        });
+
+        
+        JPanel proyectButtonPanel = new JPanel(new FlowLayout());
+        proyectButtonPanel.add(createProyectButton);
+        proyectButtonPanel.add(deleteProyectButton);
+        proyectButtonPanel.add(editProyectButton);
+
+        proyectPanel.add(proyectButtonPanel, BorderLayout.SOUTH);
+        JScrollPane proyectScrollPane=new JScrollPane(proyectTable);
+        proyectPanel.add(proyectScrollPane, BorderLayout.CENTER);
+
+        tabbedPane.addTab("Proyects", proyectPanel);
+        //
 
         setLayout(new BorderLayout());
         add(tabbedPane, BorderLayout.CENTER);
