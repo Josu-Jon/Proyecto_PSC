@@ -111,6 +111,6 @@ public class ProyectData
             proyectSprints.append(sprint.toString()).append(" --- ");
         }
 
-        return String.format("Sprint %s. Start date: %s, End date: %s, Stories: [%s]", this.idProyect, this.startDate, this.endDate, proyectSprints);
+        return String.format("Proyect %s. Start date: %s, End date: %s, Sprints: [%s]", this.idProyect, this.startDate, this.endDate, proyectSprints);
     }
 }
