@@ -105,8 +105,8 @@ public class ClientServer {
 	 */
 	public Response registerProyect(int idProyect)
 	{
-		WebTarget registerProyecTarget=webTarget.path("registerProyect");
-		Invocation.Builder invocationBuilder=registerProyecTarget.request(MediaType.APPLICATION_JSON);
+		WebTarget registerProyectTarget=webTarget.path("registerProyect");
+		Invocation.Builder invocationBuilder=registerProyectTarget.request(MediaType.APPLICATION_JSON);
 
 		ProyectData newProyect=new ProyectData();
 		newProyect.setIdProyect(idProyect);
@@ -230,7 +230,7 @@ public class ClientServer {
 	 * @return Response
 	 */
 	public Response deleteProyect(int proyectId) {
-		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
+		WebTarget registerUserWebTarget = webTarget.path("deleteProyect");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 
 		ProyectData proyect = new ProyectData();
@@ -320,7 +320,7 @@ public class ClientServer {
 	 */
 	public Response reassignSprints(int sprintId, int proyectId)
 	{
-		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
+		WebTarget registerUserWebTarget = webTarget.path("reassignSprint");
 		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
 		
 		SprintData sp = new SprintData();
@@ -392,4 +392,58 @@ public class ClientServer {
 		return stories;
 	}
 
+	
+	/**
+	 * Get all sprints
+	 * @return List of sprints
+	 */
+	public List<SprintData> getAllSprints() 
+	{
+		WebTarget registerUserWebTarget = webTarget.path("getAllSprints");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+
+		Response response = invocationBuilder.get();
+		String listString= response.readEntity(String.class);
+
+		Gson gson = new Gson();
+		// create the type for the collection. In this case define that the collection is of type Dataset
+		Type sprintDataListType = new TypeToken<Collection<SprintData>>() {}.getType();
+		List<SprintData> sprints = gson.fromJson(listString, sprintDataListType);
+
+		if(sprints != null)
+		{
+			for (SprintData us : sprints) 
+			{
+				logger.info(us.toString());
+			}
+		}
+		else
+		{
+			logger.error("Not found any sprint");
+		}
+		
+		return sprints;
+	}
+	
+	public List<SprintData> getSprintsFromProyect(int proyectId) 
+	{
+		WebTarget registerUserWebTarget = webTarget.path("registerProyect");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		ProyectData pr = new ProyectData();
+		pr.setIdProyect(proyectId);
+
+		Response response = invocationBuilder.post(Entity.entity(pr, MediaType.APPLICATION_JSON));
+
+		String listString = response.readEntity(String.class);
+
+		logger.info(listString);
+
+		Gson gson = new Gson();
+		// create the type for the collection. In this case define that the collection is of type Dataset
+		Type sprintDataListType = new TypeToken<Collection<SprintData>>() {}.getType();
+		List<SprintData> sprints = gson.fromJson(listString, sprintDataListType);
+		
+		return sprints;
+	}
 }

@@ -354,8 +354,8 @@ public class Resource {
 	 * @return Status of the operation.
 	 */
 	@POST
-	@Path("/assignProyect")
-	public Response assignProyect(ProyectSprintData proyectSprintData)
+	@Path("/assignSprint")
+	public Response assignSprint(ProyectSprintData proyectSprintData)
 	{
 		Proyect proyect = null;
 		Sprint sprint = null;

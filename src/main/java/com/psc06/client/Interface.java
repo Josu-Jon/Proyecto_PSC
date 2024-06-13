@@ -28,7 +28,7 @@ public class Interface extends JPanel {
     private JButton editSprintButton;
     private JButton deleteSprintButton;
     private JButton editUserStoryButton;
-
+    //proyect
     private JButton createProyectButton;
     private JButton deleteProyectButton;
     private JButton editProyectButton;
@@ -43,6 +43,7 @@ public class Interface extends JPanel {
         clientServer = clientServerAux;
         tabbedPane = new JTabbedPane();
         userStories = clientServer.getAllUserStories();
+        sprints=clientServer.getAllSprints(); //
 
         // Datos de prueba
         UserStoryData usd1 = new UserStoryData();
@@ -440,7 +441,7 @@ public class Interface extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = proyectTable.getSelectedRow();
-                if (selectedRow!=1)
+                if (selectedRow!=-1)
                 {
                     int proyectId=proyects.get(selectedRow).getIdProyect();
                     clientServer.deleteProyect(proyectId);
@@ -477,9 +478,9 @@ public class Interface extends JPanel {
 
                 JLabel sprintsLabel = new JLabel("Sprints del proyecto: ");
                 JList<String> sprintList = new JList<>(
-                        sprints.stream().map(SprintData::getSprintNum).toArray(String[]::new));
+                        sprints.stream().map(SprintData-> Integer.toString(SprintData.getSprintNum())).toArray(String[]::new));
                         sprintList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-                JScrollPane storiesScrollPane = new JScrollPane(sprintList);
+                JScrollPane sprintScrollPane = new JScrollPane(sprintList);
 
                 JLabel startDateLabel = new JLabel("Fecha de Inicio:");
                 JTextField startDateField = new JTextField(selectedProyect.getStartDate());
@@ -524,8 +525,8 @@ public class Interface extends JPanel {
                                 }
                             }
 
-                            updateSprintTable();
-                            clientServer.modifySprint(selectedProyect.getIdProyect());
+                            updateProyectTable();
+                            clientServer.modifyProyect(selectedProyect.getIdProyect());
                             editDialog.dispose();
                         } catch (NumberFormatException ex) {
                             JOptionPane.showMessageDialog(editDialog, "Error al guardar el proyecto.", "Error",
@@ -572,6 +573,7 @@ public class Interface extends JPanel {
 
         updateUserStoriesTable();
         updateSprintTable();
+        updateProyectTable();
     }
 
     /**
@@ -776,7 +778,7 @@ public class Interface extends JPanel {
 
         JLabel sprintsLabel = new JLabel("Sprints del proyecto: ");
         JList<String> sprintsList=new JList<>(
-            sprints.stream().map(SprintData::getSprintNum).toArray(String[]::new));
+            sprints.stream().map(SprintData -> Integer.toString(SprintData.getSprintNum())).toArray(String[]::new));
         sprintsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         JScrollPane sprintsScrollPane=new JScrollPane(sprintsList);
 
@@ -795,7 +797,6 @@ public class Interface extends JPanel {
             public void actionPerformed(ActionEvent e) 
             {
                 try {
-                    //int sprintNum = Integer.parseInt(sprintNumField.getText());
                     String startDate = startDateField.getText();
                     String endDate = endDateField.getText();
                     if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) 
@@ -829,8 +830,8 @@ public class Interface extends JPanel {
                     }
 
                     proyects.add(newProyect);
-                    updateSprintTable();
-                    //clientServer.registerSprint(sprintNum);
+                    updateProyectTable();
+                    clientServer.registerProyect(newId);
                     dialog.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error",
@@ -872,7 +873,7 @@ public class Interface extends JPanel {
         for (ProyectData proyect : proyects) 
         {
             String sprintsStr = String.join(", ",
-                proyect.getSprints().stream().map(SprintData::getSprintNum).toArray(String[]::new));
+                proyect.getSprints().stream().map(SprintData-> Integer.toString(SprintData.getSprintNum())).toArray(String[]::new));
             model.addRow(
                     new Object[] { proyect.getIdProyect(), proyect.getStartDate(), proyect.getEndDate(), sprintsStr });
         }

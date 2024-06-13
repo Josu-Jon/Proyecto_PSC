@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 public class MainClient {
 
 	private static final int sprintId = 1;
+	private static final int proyectId = 1;
 
     // Userstory 1
 	private static final int id1 = 1;
@@ -36,9 +37,11 @@ public class MainClient {
 
 		ClientServer conSer = new ClientServer(hostname, port);
 		conSer.registerSprint(sprintId);
+		conSer.registerProyect(proyectId);
 		conSer.registerUserStory(id1, userstory1, est1, pb1);
 		conSer.registerUserStory(id2, userstory2, est2, pb2);
 		conSer.assignUserStory(sprintId, id1, userstory1, est1, pb1);
+		conSer.assignSprint(sprintId, proyectId);
 		//conSer.getUserStoriesFromSprint(sprintId);
 		//conSer.reassignUserStory(sprintId, id1, userstory1, est1, pb1);
 
