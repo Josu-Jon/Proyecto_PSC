@@ -102,12 +102,15 @@ public class ProyectData
     }
 
     /**
-     * Devuelve la representación en cadena de texto del sprint
+     * Devuelve la representación en cadena de texto del proyecto
      * @return String representation
      */
-    @Override
     public String toString() {
-        return "ProyectData [idProyect=" + idProyect + ", startDate=" + startDate + ", endDate=" + endDate
-                + ", sprints=" + sprints + "]";
+        StringBuilder proyectSprints = new StringBuilder();
+        for (SprintData sprint : this.sprints) {
+            proyectSprints.append(sprint.toString()).append(" --- ");
+        }
+
+        return String.format("Sprint %s. Start date: %s, End date: %s, Stories: [%s]", this.idProyect, this.startDate, this.endDate, proyectSprints);
     }
 }
