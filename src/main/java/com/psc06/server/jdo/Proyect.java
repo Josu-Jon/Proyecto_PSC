@@ -16,7 +16,7 @@ public class Proyect
     @PrimaryKey
     private int id;
     
-    @Persistent(mappedBy="sprint", dependentElement="false")
+    @Persistent(mappedBy="proyect", dependentElement="false")
 	@Join
     Set<Sprint> sprints = new LinkedHashSet<>();
 

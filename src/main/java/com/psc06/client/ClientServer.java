@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.GenericType;
 
+import com.psc06.pojo.ProyectData;
+import com.psc06.pojo.ProyectSprintData;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.SprintStoryData;
 import com.psc06.pojo.UserStoryData;
@@ -97,6 +99,29 @@ public class ClientServer {
 	}
 
 	/**
+	 * Register a new proyect
+	 * @param idProyect Proyect id
+	 * @return Response
+	 */
+	public Response registerProyect(int idProyect)
+	{
+		WebTarget registerProyecTarget=webTarget.path("registerProyect");
+		Invocation.Builder invocationBuilder=registerProyecTarget.request(MediaType.APPLICATION_JSON);
+
+		ProyectData newProyect=new ProyectData();
+		newProyect.setIdProyect(idProyect);
+
+		Response response = invocationBuilder.post(Entity.entity(newProyect, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("Proyect correctly created. ");
+		}
+		return Response.ok().build();
+	}
+
+
+	/**
 	 * Assign a user story to a sprint
 	 * @param sprintId Sprint number
 	 * @param id User story id
@@ -121,6 +146,34 @@ public class ClientServer {
 		sprintStory.setUserStoryData(newStory);
 
 		Response response = invocationBuilder.post(Entity.entity(sprintStory, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("User Story correctly assigned. ");
+		}
+		return Response.ok().build();
+	}
+
+	/**
+	 * Assign sprints to a proyect
+	 * @param sprintId Sprint number
+	 * @param proyectId Proyect id
+	 * @return Response
+	 */
+	public Response assignSprint(int sprintId, int proyectId) 
+	{
+		WebTarget registerUserWebTarget = webTarget.path("assignSprint");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		SprintData sp = new SprintData();
+		sp.setSprintNum(sprintId);
+		ProyectData newProyect = new ProyectData();
+		newProyect.setIdProyect(proyectId);
+		ProyectSprintData proyectSprint = new ProyectSprintData();
+		proyectSprint.setSprintData(sp);
+		proyectSprint.setProyectData(newProyect);
+
+		Response response = invocationBuilder.post(Entity.entity(proyectSprint, MediaType.APPLICATION_JSON));
 		if (response.getStatus() != Status.OK.getStatusCode()) {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
@@ -170,6 +223,27 @@ public class ClientServer {
 		}
 		return Response.ok().build();
 	}
+	
+	/**
+	 * Delete a proyect
+	 * @param proyectId Proyect id
+	 * @return Response
+	 */
+	public Response deleteProyect(int proyectId) {
+		WebTarget registerUserWebTarget = webTarget.path("deleteSprint");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+
+		ProyectData proyect = new ProyectData();
+		proyect.setIdProyect(proyectId);
+
+		Response response = invocationBuilder.post(Entity.entity(proyect, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("Proyect " + proyect.getIdProyect() + " deleted. ");
+		}
+		return Response.ok().build();
+	}
 
 	/**
 	 * Modify a user story
@@ -193,6 +267,17 @@ public class ClientServer {
 		deleteSprint(id);
 		return registerSprint(id);
 	}
+	
+	/**
+	 * Modify a proyect
+	 * @param id proyect id
+	 * @return Response
+	 */
+	public Response modifyProyect(int id){
+		deleteProyect(id);
+		return registerProyect(id);
+	}
+
 
 	/**
 	 * Reassign a user story to a sprint
@@ -223,6 +308,34 @@ public class ClientServer {
 			logger.error("Error connecting with the server. Code: {}", response.getStatus());
 		} else {
 			logger.info("User Story " + id + " correctly deleted from sprint " + sprintId + ". ");
+		}
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Reassign a sprint to a proyect
+	 * @param sprintId Sprint number
+	 * @param proyectId proyect id
+	 * @return Response
+	 */
+	public Response reassignSprints(int sprintId, int proyectId)
+	{
+		WebTarget registerUserWebTarget = webTarget.path("reassignUserStory");
+		Invocation.Builder invocationBuilder = registerUserWebTarget.request(MediaType.APPLICATION_JSON);
+		
+		SprintData sp = new SprintData();
+		sp.setSprintNum(sprintId);
+		ProyectData newProyect = new ProyectData();
+		newProyect.setIdProyect(proyectId);
+		ProyectSprintData proyectSprint = new ProyectSprintData();
+		proyectSprint.setSprintData(sp);
+		proyectSprint.setProyectData(newProyect);
+
+		Response response = invocationBuilder.post(Entity.entity(proyectSprint, MediaType.APPLICATION_JSON));
+		if (response.getStatus() != Status.OK.getStatusCode()) {
+			logger.error("Error connecting with the server. Code: {}", response.getStatus());
+		} else {
+			logger.info("Sprint " + sprintId + " correctly deleted from proyect " + proyectId + ". ");
 		}
 		return Response.ok().build();
 	}
