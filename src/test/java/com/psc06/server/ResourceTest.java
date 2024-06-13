@@ -494,7 +494,7 @@ public class ResourceTest {
         Type sprintListType = new TypeToken<Collection<UserStory>>() {}.getType();
 		List<Sprint> sprintes = gson.fromJson(listString, sprintListType);
 		// create the type for the collection. In this case define that the collection is of type Dataset
-        assertEquals(sprintes.toString(), sprints.toString());
+        assertEquals(sprintes.toString(), sprints.toString()); //expected:<[[User Story 0 (null): [Estimacion: 0. Prioridad: 0.]]]> but was:<[[Sprint 1: []]]>
 
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
@@ -537,7 +537,7 @@ public class ResourceTest {
         Response response = resource.getAllSprintsFromProyect(proyectData);
 
 		// create the type for the collection. In this case define that the collection is of type Dataset
-        assertEquals(proyectData.getSprints().toString(), "["+sprints.toString()+"]");
+        assertEquals(proyectData.getSprints().toString(), "["+sprints.toString()+"]"); //expected:<[[Sprint 1. Start date: null, End date: null, Stories: []]]> but was:<[[[Sprint 1: [], Sprint 1: []]]]>
 
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
