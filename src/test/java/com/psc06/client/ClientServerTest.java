@@ -1,5 +1,7 @@
 package com.psc06.client;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -22,6 +24,8 @@ import org.mockito.*;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.SprintStoryData;
 import com.psc06.pojo.UserStoryData;
+import com.psc06.pojo.ProyectSprintData;
+import com.psc06.pojo.ProyectData;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -49,6 +53,12 @@ public class ClientServerTest {
 
     @Captor
     private ArgumentCaptor<Entity<SprintData>> sdCaptor;
+
+    @Captor
+    private ArgumentCaptor<Entity<ProyectSprintData>> psdCaptor;
+
+    @Captor
+    private ArgumentCaptor<Entity<ProyectData>> prCaptor;
 
     @Mock
     private Gson gson;
@@ -139,6 +149,36 @@ public class ClientServerTest {
     }
 
     @Test
+    public void testRegisterProyect() 
+    {
+        when(webTarget.path("registerProyect")).thenReturn(webTarget);
+
+        Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.registerProyect(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(prCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, prCaptor.getValue().getEntity().getIdProyect());
+    }
+
+    @Test
+    public void testRegisterProyectFalse() 
+    {
+        when(webTarget.path("registerProyect")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.registerProyect(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(prCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, prCaptor.getValue().getEntity().getIdProyect());
+    }
+
+    @Test
     public void testAssignUserStory() {
         when(webTarget.path("assignUserStory")).thenReturn(webTarget);
 
@@ -171,6 +211,39 @@ public class ClientServerTest {
         assertEquals(5, ssdCaptor.getValue().getEntity().getUserStoryData().getEstimation());
         assertEquals(10, ssdCaptor.getValue().getEntity().getUserStoryData().getPbPriority());
     }
+    
+@Test
+public void testAssignSprint() 
+{
+    when(webTarget.path("assignSprint")).thenReturn(webTarget);
+
+    Response response = Response.ok().build();
+    when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+    when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+    assertEquals(Response.Status.OK, clientServer.assignSprint(1, 1).getStatusInfo());
+    
+    verify(invocationBuilder).post(Entity.entity(psdCaptor.capture(), MediaType.APPLICATION_JSON));
+    assertEquals(1, psdCaptor.getValue().getEntity().getSprintData().getSprintNum());
+    assertEquals(1, psdCaptor.getValue().getEntity().getProyectData().getIdProyect());
+}
+
+@Test
+public void testAssignSprintFalse()
+{
+    when(webTarget.path("assignSprint")).thenReturn(webTarget);
+
+    Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+    when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+    assertEquals(Response.Status.OK, clientServer.assignSprint(1, 1).getStatusInfo());
+    
+    verify(invocationBuilder).post(Entity.entity(psdCaptor.capture(), MediaType.APPLICATION_JSON));
+    assertEquals(1, psdCaptor.getValue().getEntity().getSprintData().getSprintNum());
+    assertEquals(1, psdCaptor.getValue().getEntity().getProyectData().getIdProyect());
+}
+
 
     @Test
     public void testDeleteSprint() {
@@ -227,6 +300,37 @@ public class ClientServerTest {
         verify(invocationBuilder).post(Entity.entity(usdCaptor.capture(), MediaType.APPLICATION_JSON));
         assertEquals(1, usdCaptor.getValue().getEntity().getId());
     }
+
+    @Test
+    public void testDeleteProyect() 
+    {
+        when(webTarget.path("deleteProyect")).thenReturn(webTarget);
+
+        Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.deleteProyect(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(prCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, prCaptor.getValue().getEntity().getIdProyect());
+    }
+
+    @Test
+    public void testDeleteProyectFalse()
+    {
+        when(webTarget.path("deleteProyect")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.deleteProyect(1).getStatusInfo());
+        
+        verify(invocationBuilder).post(Entity.entity(prCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, prCaptor.getValue().getEntity().getIdProyect());
+    }
+
 /*
     @Test
     public void testModifyUserStory() {
@@ -282,6 +386,39 @@ public class ClientServerTest {
         assertEquals(5, ssdCaptor.getValue().getEntity().getUserStoryData().getEstimation());
         assertEquals(10, ssdCaptor.getValue().getEntity().getUserStoryData().getPbPriority());
     }
+
+    /*@Test
+    public void testReassignSprints() 
+    {
+        when(webTarget.path("reassignSprints")).thenReturn(webTarget);
+
+        Response response = Response.ok().build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.reassignSprints(1, 1)); //
+        
+        verify(invocationBuilder).post(Entity.entity(psdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, psdCaptor.getValue().getEntity().getSprintData().getSprintNum());
+        assertEquals(1, psdCaptor.getValue().getEntity().getProyectData().getIdProyect());
+    }
+
+    @Test
+    public void testReassignSprintsFalse() 
+    {
+        when(webTarget.path("reassignSprints")).thenReturn(webTarget);
+
+        Response response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        when(webTarget.request(MediaType.APPLICATION_JSON)).thenReturn(invocationBuilder);
+        when(invocationBuilder.post(any(Entity.class))).thenReturn(response);
+
+        assertEquals(Response.Status.OK, clientServer.reassignSprints(1, 1)); //
+        
+        verify(invocationBuilder).post(Entity.entity(psdCaptor.capture(), MediaType.APPLICATION_JSON));
+        assertEquals(1, psdCaptor.getValue().getEntity().getSprintData().getSprintNum());
+        assertEquals(1, psdCaptor.getValue().getEntity().getProyectData().getIdProyect());
+    }*/
+    
 /*
     @Test
     public void testGetAllUserStories() {

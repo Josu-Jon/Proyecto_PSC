@@ -25,6 +25,7 @@ import org.junit.experimental.categories.*;
 
 import com.github.noconnor.junitperf.JUnitPerfRule;
 import com.github.noconnor.junitperf.reporting.providers.HtmlReportGenerator;
+import com.psc06.pojo.ProyectData;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.UserStoryData;
 import com.psc06.server.jdo.Sprint;
@@ -122,6 +123,19 @@ public class ServerIT {
 
         assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
     }
+    
+    @Test
+    public void testRegisterProyect() 
+    {
+        ProyectData proyect = new ProyectData();
+        proyect.setIdProyect(2);
+
+        Response response = target.path("registerProyect")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(proyect, MediaType.APPLICATION_JSON));
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
 
     @Test
     public void testDeleteUserStory() {
@@ -150,4 +164,16 @@ public class ServerIT {
         assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
     }
 
+    @Test
+    public void testDeleteProyect() 
+    {
+        ProyectData proyect = new ProyectData();
+        proyect.setIdProyect(2);
+    
+        Response response = target.path("deleteProyect")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(proyect, MediaType.APPLICATION_JSON));
+    
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
 }

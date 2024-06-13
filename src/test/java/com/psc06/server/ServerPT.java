@@ -24,6 +24,8 @@ import org.junit.experimental.categories.Category;
 
 import com.psc06.server.jdo.Sprint;
 import com.psc06.server.jdo.UserStory;
+import com.psc06.pojo.ProyectData;
+import com.psc06.pojo.ProyectSprintData;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.UserStoryData;
 import com.psc06.pojo.SprintStoryData;
@@ -130,6 +132,20 @@ public class ServerPT {
 
     @Test
     @JUnitPerfTest(threads = 5, durationMs = 5000)
+    public void testRegisterProyect() 
+    {
+        ProyectData proyect = new ProyectData();
+        proyect.setIdProyect(1);
+
+        Response response = target.path("registerProyect")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(proyect, MediaType.APPLICATION_JSON));
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
+
+    @Test
+    @JUnitPerfTest(threads = 5, durationMs = 5000)
     public void testAssignUserStory() {
         UserStoryData us = new UserStoryData();
         us.setId(2);
@@ -155,6 +171,35 @@ public class ServerPT {
         response = target.path("assignUserStory")
             .request(MediaType.APPLICATION_JSON)
             .post(Entity.entity(sp, MediaType.APPLICATION_JSON));
+
+        assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
+    }
+    
+    @Test
+    @JUnitPerfTest(threads = 5, durationMs = 5000)
+    public void testAssignSprint() 
+    {
+        SprintData sd=new SprintData();
+        sd.setSprintNum(1);
+
+        ProyectData pd=new ProyectData();
+        pd.setIdProyect(1);
+
+        ProyectSprintData psd=new ProyectSprintData();
+        psd.setProyectData(pd);
+        psd.setSprintData(sd);
+
+        Response response = target.path("registerSprint")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(sd, MediaType.APPLICATION_JSON));
+
+        response = target.path("registerProyect")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(pd, MediaType.APPLICATION_JSON));
+
+        response = target.path("assignSprint")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.entity(psd, MediaType.APPLICATION_JSON));
 
         assertEquals(Family.SUCCESSFUL, response.getStatusInfo().getFamily());
     }
