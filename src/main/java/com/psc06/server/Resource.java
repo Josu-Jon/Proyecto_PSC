@@ -22,9 +22,12 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.psc06.pojo.ProyectData;
+import com.psc06.pojo.ProyectSprintData;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.SprintStoryData;
 import com.psc06.pojo.UserStoryData;
+import com.psc06.server.jdo.Proyect;
 import com.psc06.server.jdo.Sprint;
 import com.psc06.server.jdo.UserStory;
 
@@ -206,6 +209,80 @@ public class Resource {
 	}
 
 	/**
+	 * Method to register a new proyect.
+	 * 
+	 * @param proyectData Get a serialized proyect
+	 * @return Response with the status of the operation.
+	 */
+	@POST
+	@Path("/registerProyect")
+	public Response registerProyect(ProyectData proyectData)
+	{
+		try {
+			tx.begin();
+			logger.info("Checking whether the user already exits or not: '{}'", proyectData.getIdProyect());
+			Proyect proyect = null;
+			try {
+				proyect = pm.getObjectById(Proyect.class, proyectData.getIdProyect());
+			} catch (JDOObjectNotFoundException jonfe) {
+				logger.info("Exception launched: {}", jonfe.getMessage());
+			}
+
+			if (proyect != null) {
+				logger.info("Proyect already created: {}", proyect);
+			} else {
+				logger.info("Creating sprint: {}", proyect);
+				proyect = new Proyect(proyectData.getIdProyect());
+				pm.makePersistent(proyect);
+				logger.info("Sprint created: {}", proyect);
+			}
+			tx.commit();
+			return Response.ok().build();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
+		}
+	}
+
+	/**
+	 * Method to delete a proyect.
+	 * 
+	 * @param proyectData Get a serialized proyect
+	 * @return Status of the operation.
+	 */
+	@POST
+	@Path("/deleteProyect")
+	public Response deleteProyect(ProyectData proyectData) 
+	{
+		try {
+			tx.begin();
+			logger.info("Checking whether the proyect already exits: '{}'", proyectData.getIdProyect());
+			Proyect proyect = null;
+			try {
+				proyect = pm.getObjectById(Proyect.class, proyectData.getIdProyect());
+			} catch (JDOObjectNotFoundException jonfe) {
+				logger.info("Exception launched: {}", jonfe.getMessage());
+			}
+
+			if (proyect != null) {
+				logger.info("Deleting proyect: {}", proyect);
+				pm.deletePersistent(proyect);
+			} else {
+				logger.info("Proyect doesn't exist.");
+			}
+			tx.commit();
+			return Response.ok().build();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+
+		}
+	}
+
+	/**
 	 * Method to assign a user story to a sprint.
 	 * 
 	 * @param sprintStoryData Get a serialized sprint and user story
@@ -271,6 +348,71 @@ public class Resource {
 	}
 
 	/**
+	 * Method to assign a sprint to a proyect.
+	 * 
+	 * @param sprintStoryData Get a serialized sprint and proyect
+	 * @return Status of the operation.
+	 */
+	@POST
+	@Path("/assignProyect")
+	public Response assignProyect(ProyectSprintData proyectSprintData)
+	{
+		Proyect proyect = null;
+		Sprint sprint = null;
+		try {
+			tx.begin();
+			logger.info("Creating query ...");
+
+			try (Query<?> q = pm.newQuery(Proyect.class)) {
+				q.setFilter("this.id == :id");
+				q.setUnique(true);
+				proyect = (Proyect) q.execute(proyectSprintData.getProyectData().getIdProyect());
+
+				logger.info("Proyect retrieved: {}", proyect.toString());
+				if (proyect != null) 
+				{
+					try {
+						sprint = pm.getObjectById(Sprint.class, proyectSprintData.getSprintData().getSprintNum());
+					} catch (JDOObjectNotFoundException jonfe) {
+						logger.info("Exception launched: {}", jonfe.getMessage());
+					}
+
+					if (sprint != null)
+					{
+						proyect.getAllSprints().add(sprint);
+						pm.makePersistent(proyect);
+
+					} 
+					else
+					{
+						logger.info("Creating sprint: {}", sprint);
+						sprint = new Sprint(proyectSprintData.getSprintData().getSprintNum()); //?
+						pm.makePersistent(sprint);
+						proyect.getAllSprints().add(sprint);
+						pm.makePersistent(proyect);
+						logger.info("Assigned sprint ! ");
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+
+		if (proyect != null && sprint != null) {
+			return Response.ok().build();
+		} else {
+			return Response.status(Status.BAD_REQUEST).entity("Los datos implementados no son correctos").build();
+		}
+	}
+
+	/**
 	 * Method to reassign a user story to a sprint.
 	 * 
 	 * @param sprintStoryData Get a serialized sprint and user story
@@ -321,6 +463,61 @@ public class Resource {
 		}
 		return Response.status(Status.BAD_REQUEST).entity("Los datos implementados no son correctos").build();
 
+	}
+	
+	/**
+	 * Method to reassign a sprint to a proyect.
+	 * 
+	 * @param sprintStoryData Get a serialized sprint and user story
+	 * @return Status of the operation.
+	 */
+	@POST
+	@Path("/reassignSprint")
+	public Response reassignSprint(ProyectSprintData proyectSprintData)
+	{
+		Proyect proyect = null;
+		Sprint sprint = null;
+		try {
+			tx.begin();
+			logger.info("Creating query ...");
+
+			try (Query<?> q = pm.newQuery(Proyect.class)) {
+				q.setFilter("this.id == :id");
+				q.setUnique(true);
+				proyect = (Proyect) q.execute(proyectSprintData.getProyectData().getIdProyect());
+
+				logger.info("Proyect retrieved: {}", proyect.toString());
+				if (proyect != null) 
+				{
+					try {
+						sprint = pm.getObjectById(Sprint.class, proyectSprintData.getSprintData().getSprintNum());
+					} catch (JDOObjectNotFoundException jonfe) {
+						logger.info("Exception launched: {}", jonfe.getMessage());
+					}
+
+					if (sprint != null) 
+					{
+						proyect.getAllSprints().remove(sprint);
+						pm.makePersistent(proyect);
+						logger.info("Deleted sprint {} from proyect {}! ", sprint, proyect);
+					} 
+					else
+					{
+						logger.info("Error. El user sprint introducido no existe. ");
+					}
+					tx.commit();
+					return Response.ok().build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+		return Response.status(Status.BAD_REQUEST).entity("Los datos implementados no son correctos").build();
 	}
 
 	/**
@@ -396,6 +593,90 @@ public class Resource {
 				return Response.ok(returnedJson).build();
 			} else {
 				logger.info("Sprint no existe");
+			}
+			tx.commit();
+
+			return Response.ok().build();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+	}
+
+	/**
+	 * Method to get all sprints.
+	 * 
+	 * @return List of sprints and status of the operation.
+	 */
+	@GET
+	@Path("/getAllSprints")
+	public Response getAllSprints() 
+	{
+		List<Sprint> sprints = null;
+
+		try {
+			tx.begin();
+			logger.info("Creating query ...");
+
+			try (Query<Sprint> q = pm.newQuery(Sprint.class)) {
+
+				sprints = q.executeList();
+
+				logger.info("Sprints retrieved: -> {}", sprints.toString());
+
+				Gson aux = new Gson();
+				String returnedJson = aux.toJson(sprints);
+
+				tx.commit();
+				return Response.ok(returnedJson).build();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+		}
+
+		return Response.status(Status.EXPECTATION_FAILED).entity(null).build();
+	}
+
+	@POST
+	@Path("/getAllSprintsFromProyect")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllSprintsFromProyect(ProyectData proyectId) 
+	{
+		List<Sprint> sprints = null;
+		Proyect pr = null;
+
+		try {
+			tx.begin();
+			logger.info("Checking whether the proyect already exits: '{}'", proyectId);
+
+			try {
+				pr = pm.getObjectById(Proyect.class, proyectId.getIdProyect());
+
+			} catch (JDOObjectNotFoundException jonfe) {
+
+				logger.info("Exception launched: {}", jonfe.getMessage());
+
+			}
+
+			if (pr != null)
+			{
+				sprints = new ArrayList<Sprint>(pr.getAllSprints());
+
+				logger.info("Sprints retrieved: -> {}", sprints.toString());
+
+				Gson aux = new Gson();
+				String returnedJson = aux.toJson(sprints);
+
+				return Response.ok(returnedJson).build();
+			} else {
+				logger.info("Proyecto no existe");
 			}
 			tx.commit();
 

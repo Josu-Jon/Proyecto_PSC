@@ -71,7 +71,7 @@ public class Proyect
      * Get all sprints in the project
      * @return Set of sprints
      */
-    public Set<Sprint> getAllStories() {
+    public Set<Sprint> getAllSprints() {
         return this.sprints;
     }
 
