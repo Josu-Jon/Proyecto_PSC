@@ -63,7 +63,7 @@ public class Proyect
      * Remove a sprint from the project
      * @param sprint sprint
      */
-    public void removeStory(UserStory sprint){
+    public void removeSprint(Sprint sprint){
         sprints.remove(sprint);
     }
 
@@ -85,7 +85,7 @@ public class Proyect
             proyectSprints.append(sprint.toString() + " --- ");
         }
 
-        return String.format("Sprint %s: [%s]", id, proyectSprints);
+        return String.format("Proyect %s: [%s]", id, proyectSprints);
     }
     
 }
