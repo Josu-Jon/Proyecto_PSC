@@ -27,17 +27,18 @@ import org.mockito.MockitoAnnotations;
 
 import com.psc06.server.jdo.Sprint;
 import com.psc06.server.jdo.UserStory;
+import com.psc06.server.jdo.Proyect;
 import com.psc06.pojo.SprintData;
 import com.psc06.pojo.UserStoryData;
 import com.psc06.pojo.SprintStoryData;
+import com.psc06.pojo.ProyectSprintData;
+import com.psc06.pojo.ProyectData;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.*;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
 
 public class ResourceTest {
     
@@ -170,6 +171,52 @@ public class ResourceTest {
     }
 
     @Test
+    public void testRegisterProyect()
+    {
+        // Preparamos el persistence manager para devolver el mock
+        ProyectData proyect = new ProyectData();
+        proyect.setIdProyect(5);
+
+        // Simulamos que el objeto no esta en la BBDD
+        when(persistenceManager.getObjectById(any())).thenThrow(new JDOObjectNotFoundException());
+        
+        // Preparamos el mock
+        when(transaction.isActive()).thenReturn(true);
+
+        //Llamamos al metodo a testear
+        Response response = resource.registerProyect(proyect);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<Proyect> proyectCaptor = ArgumentCaptor.forClass(Proyect.class);
+        verify(persistenceManager).makePersistent(proyectCaptor.capture());
+        assertEquals(5, proyectCaptor.getValue().getId());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+    @Test
+    public void testDeleteProyect()
+    {
+        // Preparamos el persistence manager para devolver el mock
+        ProyectData proyectData = new ProyectData();
+        proyectData.setIdProyect(5);
+
+        Response response = resource.registerProyect(proyectData);
+
+        Proyect proyect = spy(Proyect.class);
+        // Simulamos que el objeto no esta en la BBDD
+        when(persistenceManager.getObjectById(Proyect.class, proyectData.getIdProyect())).thenReturn(proyect);
+
+        //Llamamos al metodo a testear
+        response = resource.deleteProyect(proyectData);
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+
+    @Test
     public void testAssignUserStory(){
 
         // Simulamos que el objeto no esta en la BBDD
@@ -210,6 +257,46 @@ public class ResourceTest {
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
+    
+    @Test
+    public void testAssignSprint()
+    {
+        // Simulamos que el objeto no esta en la BBDD
+        @SuppressWarnings("unchecked") 
+        Query<Proyect> query = mock(Query.class);
+        when(persistenceManager.newQuery(Proyect.class)).thenReturn(query);
+
+        Proyect proyect = new Proyect(1);
+        when(query.execute(proyect.getId())).thenReturn(proyect);
+
+        // Preparamos el persistence manager para devolver el mock
+        ProyectSprintData proyectSprintData = new ProyectSprintData();
+        SprintData sprintData = new SprintData();
+        sprintData.setSprintNum(1);
+        ProyectData proyectData = new ProyectData();
+        proyectData.setIdProyect(1);
+        proyectSprintData.setSprintData(sprintData);
+        proyectSprintData.setProyectData(proyectData);
+        
+        // Preparamos el comportamiento del mock
+        when(transaction.isActive()).thenReturn(false);
+
+        //Llamamos al metodo a testear
+        Response response = resource.assignSprint(proyectSprintData);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<String> proyectCaptor = ArgumentCaptor.forClass(String.class);
+        verify(query).setFilter(proyectCaptor.capture());
+        assertEquals("this.id == :id", proyectCaptor.getValue());
+
+        ArgumentCaptor<Boolean> uniqueCaptor = ArgumentCaptor.forClass(Boolean.class);
+        verify(query).setUnique(uniqueCaptor.capture());
+        assertTrue(uniqueCaptor.getValue());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
 
     @Test
     public void testReassignUserStory(){
@@ -252,6 +339,46 @@ public class ResourceTest {
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
+
+    @Test
+    public void testReassignSprint()
+    {
+        // Simulamos que el objeto no esta en la BBDD
+        @SuppressWarnings("unchecked") 
+        Query<Proyect> query = mock(Query.class);
+        when(persistenceManager.newQuery(Proyect.class)).thenReturn(query);
+
+        Proyect proyect = new Proyect(1);
+        when(query.execute(proyect.getId())).thenReturn(proyect);
+
+        // Preparamos el persistence manager para devolver el mock
+        ProyectSprintData proyectSprintData = new ProyectSprintData();
+        SprintData sprintData = new SprintData();
+        sprintData.setSprintNum(1);
+        ProyectData proyectData = new ProyectData();
+        proyectData.setIdProyect(1);
+        proyectSprintData.setSprintData(sprintData);
+        proyectSprintData.setProyectData(proyectData);
+        
+        // Preparamos el comportamiento del mock
+        when(transaction.isActive()).thenReturn(false);
+
+        //Llamamos al metodo a testear
+        Response response = resource.reassignSprint(proyectSprintData);
+
+        // Comprobamos que se ha guardado correctamente
+        ArgumentCaptor<String> proyectCaptor = ArgumentCaptor.forClass(String.class);
+        verify(query).setFilter(proyectCaptor.capture());
+        assertEquals("this.id == :id", proyectCaptor.getValue());
+
+        ArgumentCaptor<Boolean> uniqueCaptor = ArgumentCaptor.forClass(Boolean.class);
+        verify(query).setUnique(uniqueCaptor.capture());
+        assertTrue(uniqueCaptor.getValue());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
 
     @Test
     public void testGetAllUserStory(){
@@ -337,4 +464,83 @@ public class ResourceTest {
         // Comprobamos la response
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
+    
+    @Test
+    public void testGetAllSprints()
+    {
+        // Preparamos el persistence manager para devolver el mock
+        List<Sprint> sprints = new ArrayList<Sprint>();
+
+        SprintData sprintData = new SprintData();
+        sprintData.setSprintNum(1);
+
+        @SuppressWarnings("unchecked")
+        Query<Sprint> query = mock(Query.class);
+        when(persistenceManager.newQuery(Sprint.class)).thenReturn(query);
+
+        Sprint sprint = new Sprint(1);
+        sprints.add(sprint);
+        resource.registerSprint(sprintData);
+
+        when(query.executeList()).thenReturn(sprints);
+
+        //Llamamos al metodo a testear
+        Response response = resource.getAllSprints();
+
+        // Comprobamos que se ha guardado correctamente
+        String listString = response.getEntity().toString();
+
+		Gson gson = new Gson();
+        Type sprintListType = new TypeToken<Collection<UserStory>>() {}.getType();
+		List<Sprint> sprintes = gson.fromJson(listString, sprintListType);
+		// create the type for the collection. In this case define that the collection is of type Dataset
+        assertEquals(sprintes.toString(), sprints.toString());
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+
+
+    /**
+     * Test para comprobar que se devuelven todas las historias de usuario de un sprint
+     */
+    @Test
+    public void testGetAllSprintsFromProyect()
+    {
+        // Preparamos el persistence manager para devolver el mock
+        List<Sprint> sprints = new ArrayList<Sprint>();
+
+        ProyectData proyectData = new ProyectData();
+        proyectData.setIdProyect(1);
+
+        SprintData sprintData = new SprintData();
+        sprintData.setSprintNum(1);
+
+        proyectData.addSprint(sprintData);
+
+        @SuppressWarnings("unchecked")
+        Query<Sprint> query = mock(Query.class);
+        when(persistenceManager.newQuery(Sprint.class)).thenReturn(query);
+
+        sprints.add(new Sprint(1));
+
+        ProyectSprintData proyectSprintData = new ProyectSprintData();
+        proyectSprintData.setProyectData(proyectData);
+        proyectSprintData.setSprintData(sprintData);
+
+        Sprint sprint = new Sprint(1);
+        sprints.add(sprint);
+
+        when(query.executeList()).thenReturn(sprints);
+
+        //Llamamos al metodo a testear
+        Response response = resource.getAllSprintsFromProyect(proyectData);
+
+		// create the type for the collection. In this case define that the collection is of type Dataset
+        assertEquals(proyectData.getSprints().toString(), "["+sprints.toString()+"]");
+
+        // Comprobamos la response
+        assertEquals(Response.Status.OK, response.getStatusInfo());
+    }
+    
 }
