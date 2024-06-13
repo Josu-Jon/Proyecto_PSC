@@ -428,7 +428,7 @@ public class Interface extends JPanel {
         createProyectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //añadir
+                createProyectDialog();
             }
         });
 
@@ -439,7 +439,18 @@ public class Interface extends JPanel {
         deleteProyectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //eliminar
+                int selectedRow = proyectTable.getSelectedRow();
+                if (selectedRow!=1)
+                {
+                    int proyectId=proyects.get(selectedRow).getIdProyect();
+                    clientServer.deleteProyect(proyectId);
+                    ((DefaultTableModel) proyectTable.getModel()).removeRow(selectedRow);
+                }
+                else 
+                {
+                    JOptionPane.showMessageDialog(Interface.this, "Por favor, seleccione un Proyecto para eliminar.",
+                            "Selección Incorrecta", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
 
@@ -450,10 +461,99 @@ public class Interface extends JPanel {
         editProyectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //añadir
+                int selectedRow = sprintTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un Proyecto para editar.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                ProyectData selectedProyect = proyects.get(selectedRow);
+                
+                JFrame editDialog = new JFrame("Editar Proyecto");
+                editDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                editDialog.setSize(400, 300);
+                editDialog.setLayout(new GridLayout(5, 2));
+
+                JLabel sprintsLabel = new JLabel("Sprints del proyecto: ");
+                JList<String> sprintList = new JList<>(
+                        sprints.stream().map(SprintData::getSprintNum).toArray(String[]::new));
+                        sprintList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                JScrollPane storiesScrollPane = new JScrollPane(sprintList);
+
+                JLabel startDateLabel = new JLabel("Fecha de Inicio:");
+                JTextField startDateField = new JTextField(selectedProyect.getStartDate());
+
+                JLabel endDateLabel = new JLabel("Fecha de Fin:");
+                JTextField endDateField = new JTextField(selectedProyect.getEndDate());
+
+                JButton saveButton = new JButton("Guardar");
+                /**
+                 * Guarda los cambios realizados en el Proyecto seleccionado
+                 */
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            String startDate = startDateField.getText();
+                            String endDate = endDateField.getText();
+                            if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) {
+                                JOptionPane.showMessageDialog(editDialog, "El formato de fecha debe ser yyyy-MM-dd",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            if (!isEndDateAfterStartDate(startDate, endDate)) {
+                                JOptionPane.showMessageDialog(editDialog,
+                                        "La fecha de fin debe ser posterior a la fecha de inicio", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+
+                            selectedProyect.setStartDate(startDate);
+                            selectedProyect.setEndDate(endDate);
+                            selectedProyect.clearSprints();
+                            for (int selectedSprintNum : sprintList.getSelectedIndices()) //?
+                            {
+                                for (SprintData sd : sprints) 
+                                {
+                                    if (sd.getSprintNum()==selectedSprintNum)
+                                    {
+                                        selectedProyect.addSprint(sd);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            updateSprintTable();
+                            clientServer.modifySprint(selectedProyect.getIdProyect());
+                            editDialog.dispose();
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(editDialog, "Error al guardar el proyecto.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+                
+                JButton cancelButton = new JButton("Cancelar");
+                cancelButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        editDialog.dispose();
+                    }
+                });
+
+                editDialog.add(sprintsLabel);
+                editDialog.add(sprintScrollPane);
+                editDialog.add(startDateLabel);
+                editDialog.add(startDateField);
+                editDialog.add(endDateLabel);
+                editDialog.add(endDateField);
+                editDialog.add(cancelButton);
+                editDialog.add(saveButton);
+
+                editDialog.setVisible(true);
             }
         });
-
         
         JPanel proyectButtonPanel = new JPanel(new FlowLayout());
         proyectButtonPanel.add(createProyectButton);
@@ -663,6 +763,122 @@ public class Interface extends JPanel {
         }
     }
 
+
+    /**
+     * Crea un diálogo para crear un nuevo proyecto
+     */
+    private void createProyectDialog()
+    {
+        JFrame dialog=new JFrame("Crear Nuevo Proyecto");
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.setSize(300, 200);
+        dialog.setLayout(new GridLayout(4, 2));
+
+        JLabel sprintsLabel = new JLabel("Sprints del proyecto: ");
+        JList<String> sprintsList=new JList<>(
+            sprints.stream().map(SprintData::getSprintNum).toArray(String[]::new));
+        sprintsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JScrollPane sprintsScrollPane=new JScrollPane(sprintsList);
+
+        JLabel startDateLabel = new JLabel("Fecha de Inicio:");
+        JTextField startDateField = new JTextField();
+
+        JLabel endDateLabel = new JLabel("Fecha de Fin:");
+        JTextField endDateField = new JTextField();
+
+        JButton createButton = new JButton("Crear");
+        /**
+         * Crea un nuevo Proyecto con los datos ingresados
+         */
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    //int sprintNum = Integer.parseInt(sprintNumField.getText());
+                    String startDate = startDateField.getText();
+                    String endDate = endDateField.getText();
+                    if (!isValidDateFormat(startDate) || !isValidDateFormat(endDate)) 
+                    {
+                        JOptionPane.showMessageDialog(dialog, "El formato de fecha debe ser yyyy-MM-dd", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (!isEndDateAfterStartDate(startDate, endDate)) 
+                    {
+                        JOptionPane.showMessageDialog(dialog, "La fecha de fin debe ser posterior a la fecha de inicio",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    int newId=getNextIdProyect();
+                    ProyectData newProyect = new ProyectData();
+                    newProyect.setIdProyect(newId);
+                    newProyect.setStartDate(startDate);
+                    newProyect.setEndDate(endDate);
+
+                    for (int selectedSprintNum : sprintsList.getSelectedIndices()) //?
+                    {
+                        for (SprintData sd : sprints) 
+                        {
+                            if (sd.getSprintNum()==selectedSprintNum)
+                            {
+                                newProyect.addSprint(sd);
+                                break;
+                            }
+                        }
+                    }
+
+                    proyects.add(newProyect);
+                    updateSprintTable();
+                    //clientServer.registerSprint(sprintNum);
+                    dialog.dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialog, "El número de Sprint debe ser un valor numérico.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        JButton cancelButton = new JButton("Cancelar");
+        /**
+         * Cancela la creación del Sprint
+         */
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+
+        dialog.add(sprintsLabel);
+        dialog.add(sprintsScrollPane);
+        dialog.add(startDateLabel);
+        dialog.add(startDateField);
+        dialog.add(endDateLabel);
+        dialog.add(endDateField);
+        dialog.add(cancelButton);
+        dialog.add(createButton);
+        
+        dialog.setVisible(true);
+    }
+
+    /**
+     * Actualiza la tabla de Sprints
+     */
+    private void updateProyectTable() 
+    {
+        DefaultTableModel model = (DefaultTableModel) proyectTable.getModel();
+        model.setRowCount(0);
+        for (ProyectData proyect : proyects) 
+        {
+            String sprintsStr = String.join(", ",
+                proyect.getSprints().stream().map(SprintData::getSprintNum).toArray(String[]::new));
+            model.addRow(
+                    new Object[] { proyect.getIdProyect(), proyect.getStartDate(), proyect.getEndDate(), sprintsStr });
+        }
+    }
+
+
     /**
      * Muestra la ventana de la interfaz
      */
@@ -723,6 +939,20 @@ public class Interface extends JPanel {
         int maxId = 0;
         for (UserStoryData story : userStories) {
             maxId = Math.max(maxId, story.getId());
+        }
+
+        return maxId + 1;
+    }
+    
+    /**
+     * Obtiene el siguiente ID para un proyecto
+     * @return Siguiente ID
+     */
+    private int getNextIdProyect() {
+
+        int maxId = 0;
+        for (ProyectData proyect : proyects) {
+            maxId = Math.max(maxId, proyect.getIdProyect());
         }
 
         return maxId + 1;
